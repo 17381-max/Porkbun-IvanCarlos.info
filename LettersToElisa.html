@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>₍^. .^₎⟆</title>
+    <title>₍^. .^₎⟆ - Letters</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* Main letter card */
         .diary-entry {
             background: #ffffff;
             padding: 48px 56px;
@@ -32,7 +31,6 @@
             border: 1px solid #ece4d8;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -62,7 +60,6 @@
             letter-spacing: 1px;
         }
 
-        /* Mode toggle area */
         .mode-area {
             display: flex;
             justify-content: space-between;
@@ -130,7 +127,6 @@
             background: #f0ebe4;
         }
 
-        /* Password modal */
         .password-modal {
             display: none;
             position: fixed;
@@ -170,11 +166,6 @@
             text-align: center;
         }
 
-        .password-modal-content input:focus {
-            outline: none;
-            border-color: #b8a28c;
-        }
-
         .password-modal-content button {
             background: #d4c3ae;
             color: #2c221a;
@@ -190,7 +181,6 @@
             margin-top: 8px;
         }
 
-        /* Date line */
         .letter-date {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 12px;
@@ -201,7 +191,6 @@
             padding-bottom: 12px;
         }
 
-        /* Writing area */
         .writing-area {
             margin-bottom: 32px;
             display: none;
@@ -232,19 +221,6 @@
             color: #2c221a;
         }
 
-        .title-input:focus {
-            outline: none;
-            border-color: #b8a28c;
-            background: #ffffff;
-        }
-
-        .title-input::placeholder {
-            color: #c9bcab;
-            font-style: italic;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
         textarea {
             width: 100%;
             padding: 20px;
@@ -259,19 +235,6 @@
             color: #2c221a;
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: #b8a28c;
-            background: #ffffff;
-        }
-
-        textarea::placeholder {
-            color: #c9bcab;
-            font-style: italic;
-            font-size: 14px;
-        }
-
-        /* Buttons */
         .button-group {
             display: flex;
             gap: 12px;
@@ -307,11 +270,6 @@
             border: 1px solid #e0d5c8;
         }
 
-        .btn-secondary:hover {
-            background: #e6dfd6;
-        }
-
-        /* Entries section */
         .entries-section {
             margin-top: 48px;
         }
@@ -336,61 +294,52 @@
             background: #e8dfd4;
         }
 
-        /* Each letter entry */
-        .letter-entry {
+        /* Letter preview card - clickable */
+        .letter-preview {
             background: #fefcf9;
             border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 20px;
+            padding: 24px 28px;
+            margin-bottom: 16px;
             border: 1px solid #ece4d8;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .letter-entry:hover {
-            border-color: #d9ccbc;
+        .letter-preview:hover {
+            border-color: #d4bba4;
             background: #ffffff;
+            transform: translateX(4px);
         }
 
-        .letter-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f0e8e0;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .letter-title {
+        .preview-title {
             font-family: 'Georgia', serif;
             font-size: 18px;
             font-weight: 500;
             color: #3d2b1a;
-            flex: 1;
+            margin-bottom: 12px;
         }
 
-        .letter-date-display {
+        .preview-date {
             font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: 11px;
+            font-size: 10px;
             color: #b8a28c;
+            margin-bottom: 12px;
         }
 
-        .letter-content {
+        .preview-excerpt {
             font-family: 'Georgia', serif;
-            font-size: 15px;
-            line-height: 1.75;
-            color: #3a3028;
-            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #8b7355;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Hidden action buttons in read mode */
         .action-buttons {
             display: flex;
             justify-content: flex-end;
-            align-items: center;
-            margin-top: 16px;
-            gap: 8px;
+            margin-top: 12px;
         }
 
         body.read-mode .action-buttons {
@@ -401,19 +350,18 @@
             background: transparent;
             border: 1px solid #e8ddd2;
             color: #bfaa95;
-            font-size: 12px;
-            padding: 5px 14px;
+            font-size: 11px;
+            padding: 4px 12px;
             border-radius: 30px;
+            cursor: pointer;
         }
 
         .delete-btn:hover {
             background: #f5ede6;
             border-color: #d4bba4;
             color: #a07754;
-            transform: none;
         }
 
-        /* Pagination styles */
         .pagination {
             display: flex;
             justify-content: center;
@@ -437,8 +385,6 @@
 
         .pagination-btn:hover:not(:disabled) {
             background: #f0ebe4;
-            border-color: #c4b094;
-            color: #5c4430;
         }
 
         .pagination-btn:disabled {
@@ -450,7 +396,6 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .page-number {
@@ -471,15 +416,10 @@
             border-color: #c4b094;
         }
 
-        .page-number:hover:not(.active) {
-            background: #f0ebe4;
-        }
-
         .page-jump {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-left: 8px;
         }
 
         .page-jump input {
@@ -492,33 +432,12 @@
             text-align: center;
         }
 
-        .page-jump input:focus {
-            outline: none;
-            border-color: #b8a28c;
-        }
-
-        .page-jump button {
-            background: transparent;
-            border: 1px solid #e0d5c8;
-            font-size: 11px;
-            padding: 5px 12px;
-            border-radius: 30px;
-            color: #a0846a;
-            cursor: pointer;
-        }
-
-        .page-jump button:hover {
-            background: #f0ebe4;
-        }
-
         .page-info {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
             color: #b8a28c;
-            margin-right: 8px;
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 48px 24px;
@@ -528,19 +447,6 @@
             color: #b8a694;
         }
 
-        .empty-state-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
-            opacity: 0.6;
-        }
-
-        .empty-state p {
-            font-family: 'Georgia', serif;
-            font-size: 14px;
-            font-style: italic;
-        }
-
-        /* Status messages */
         .status {
             padding: 12px 20px;
             border-radius: 40px;
@@ -552,41 +458,15 @@
         .status-error { background: #fef0ed; color: #b86b52; }
         .status-success { background: #edf3ea; color: #6f8f5c; }
 
-        /* Responsive */
         @media (max-width: 600px) {
-            body {
-                padding: 24px 16px;
-            }
-            .diary-entry {
-                padding: 28px 20px;
-            }
-            .letter-entry {
-                padding: 20px;
-            }
-            .letter-title {
-                font-size: 16px;
-            }
-            .button-group button {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-            .mode-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .sort-control {
-                justify-content: center;
-            }
-            .mode-badge {
-                justify-content: center;
-            }
-            .pagination {
-                flex-direction: column;
-                align-items: center;
-            }
-            .page-jump {
-                margin-left: 0;
-            }
+            body { padding: 24px 16px; }
+            .diary-entry { padding: 28px 20px; }
+            .letter-preview { padding: 18px 20px; }
+            .preview-title { font-size: 16px; }
+            .mode-area { flex-direction: column; align-items: stretch; }
+            .sort-control, .mode-badge { justify-content: center; }
+            .pagination { flex-direction: column; align-items: center; }
+            .page-jump { margin-left: 0; }
         }
     </style>
 </head>
@@ -599,7 +479,6 @@
                 <div class="tagline">For my friend</div>
             </div>
 
-            <!-- Mode area with sort controls -->
             <div class="mode-area">
                 <div class="sort-control">
                     <span>📖 Sort by:</span>
@@ -612,7 +491,6 @@
                 </div>
             </div>
 
-            <!-- Password Modal -->
             <div id="passwordModal" class="password-modal">
                 <div class="password-modal-content">
                     <h3>Enter Password</h3>
@@ -624,7 +502,6 @@
 
             <div class="letter-date" id="currentDate"></div>
 
-            <!-- Writing area (hidden until unlocked) -->
             <div id="writingArea" class="writing-area">
                 <div class="greeting">Dear friend,</div>
                 <input type="text" id="letterTitle" class="title-input" placeholder="Letter title (optional)">
@@ -641,7 +518,6 @@
                 <div class="section-title">Saved Messages 😼</div>
                 <div id="entriesList"></div>
                 
-                <!-- Pagination controls -->
                 <div id="paginationControls" class="pagination" style="display: none;">
                     <button class="pagination-btn" id="prevPageBtn" onclick="goToPreviousPage()">← Previous</button>
                     <div class="page-numbers" id="pageNumbers"></div>
@@ -657,16 +533,11 @@
     </div>
 
     <script>
-        // 🔐 SET YOUR PASSWORD HERE
         const WRITE_PASSWORD = "KeyLock";
+        const ITEMS_PER_PAGE = 6;
         
-        // Pagination settings
-        const ITEMS_PER_PAGE = 3;
-        
-        // JSONBin credentials
         const BIN_ID = "69d5b340856a6821890cdbfd";      
         const API_KEY = "$2a$10$C32wnSCGBNKjDww3OFHAtedCX0dUnscUKzf8ZS8F65GeyLo1bgF6C";
-        
         const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
         
         let currentEntries = [];
@@ -674,32 +545,23 @@
         let currentSortOrder = 'newest';
         let currentPage = 1;
 
-        // Set current date
         const today = new Date();
         document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
         });
 
         function setSortOrder(order) {
             currentSortOrder = order;
-            currentPage = 1; // Reset to first page when sorting changes
-            
+            currentPage = 1;
             const newestBtn = document.getElementById('sortNewestBtn');
             const oldestBtn = document.getElementById('sortOldestBtn');
-            
             if (order === 'newest') {
                 newestBtn.classList.add('active');
                 oldestBtn.classList.remove('active');
-                showStatus('Showing newest letters first', 'success');
             } else {
                 oldestBtn.classList.add('active');
                 newestBtn.classList.remove('active');
-                showStatus('Showing oldest letters first', 'success');
             }
-            
             displayEntries();
         }
 
@@ -715,64 +577,49 @@
         function getCurrentPageEntries() {
             const sortedEntries = getSortedEntries();
             const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = startIndex + ITEMS_PER_PAGE;
-            return sortedEntries.slice(startIndex, endIndex);
+            return sortedEntries.slice(startIndex, startIndex + ITEMS_PER_PAGE);
         }
 
         function getTotalPages() {
             return Math.ceil(currentEntries.length / ITEMS_PER_PAGE);
         }
 
+        function getPreviewText(text, maxLength = 80) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
         function updatePaginationControls() {
             const totalPages = getTotalPages();
             const paginationDiv = document.getElementById('paginationControls');
-            const pageNumbersDiv = document.getElementById('pageNumbers');
-            
             if (totalPages <= 1) {
                 paginationDiv.style.display = 'none';
                 return;
             }
-            
             paginationDiv.style.display = 'flex';
             
-            // Update Previous/Next buttons
-            const prevBtn = document.getElementById('prevPageBtn');
-            const nextBtn = document.getElementById('nextPageBtn');
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages;
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
             
-            // Generate page numbers
-            let pageNumbersHtml = '';
-            
-            // Show limited page numbers for cleaner display
+            const pageNumbersDiv = document.getElementById('pageNumbers');
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, currentPage + 2);
+            let html = '';
             
-            // Add first page if not in range
             if (startPage > 1) {
-                pageNumbersHtml += `<button class="page-number" onclick="goToPageNumber(1)">1</button>`;
-                if (startPage > 2) {
-                    pageNumbersHtml += `<span class="page-info" style="margin: 0 4px;">...</span>`;
-                }
+                html += `<button class="page-number" onclick="goToPageNumber(1)">1</button>`;
+                if (startPage > 2) html += `<span class="page-info">...</span>`;
             }
-            
             for (let i = startPage; i <= endPage; i++) {
-                pageNumbersHtml += `<button class="page-number ${i === currentPage ? 'active' : ''}" onclick="goToPageNumber(${i})">${i}</button>`;
+                html += `<button class="page-number ${i === currentPage ? 'active' : ''}" onclick="goToPageNumber(${i})">${i}</button>`;
             }
-            
             if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    pageNumbersHtml += `<span class="page-info" style="margin: 0 4px;">...</span>`;
-                }
-                pageNumbersHtml += `<button class="page-number" onclick="goToPageNumber(${totalPages})">${totalPages}</button>`;
+                if (endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
+                html += `<button class="page-number" onclick="goToPageNumber(${totalPages})">${totalPages}</button>`;
             }
-            
-            pageNumbersDiv.innerHTML = pageNumbersHtml;
-            
-            // Update page input
-            const pageInput = document.getElementById('pageNumberInput');
-            pageInput.value = currentPage;
-            pageInput.max = totalPages;
+            pageNumbersDiv.innerHTML = html;
+            document.getElementById('pageNumberInput').value = currentPage;
+            document.getElementById('pageNumberInput').max = totalPages;
         }
 
         function goToPageNumber(page) {
@@ -783,31 +630,31 @@
         }
 
         function goToPreviousPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                displayEntries();
-            }
+            if (currentPage > 1) { currentPage--; displayEntries(); }
         }
 
         function goToNextPage() {
             const totalPages = getTotalPages();
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayEntries();
-            }
+            if (currentPage < totalPages) { currentPage++; displayEntries(); }
         }
 
         function goToPage() {
-            const input = document.getElementById('pageNumberInput');
-            let page = parseInt(input.value);
+            let page = parseInt(document.getElementById('pageNumberInput').value);
             const totalPages = getTotalPages();
-            
             if (isNaN(page)) page = 1;
-            if (page < 1) page = 1;
-            if (page > totalPages) page = totalPages;
-            
+            page = Math.min(Math.max(1, page), totalPages);
             currentPage = page;
             displayEntries();
+        }
+
+        function openLetter(globalIndex) {
+            const sortedEntries = getSortedEntries();
+            const letter = sortedEntries[globalIndex];
+            if (letter) {
+                localStorage.setItem('allLetters', JSON.stringify(currentEntries));
+                localStorage.setItem('currentSortOrder', currentSortOrder);
+                window.location.href = `LettersToElisa.html?id=${letter.id}&index=${globalIndex}`;
+            }
         }
 
         function showPasswordModal() {
@@ -821,8 +668,7 @@
         }
 
         function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === WRITE_PASSWORD) {
+            if (document.getElementById('passwordInput').value === WRITE_PASSWORD) {
                 closePasswordModal();
                 enableWriteMode();
             } else {
@@ -835,38 +681,25 @@
             document.body.classList.remove('read-mode');
             document.getElementById('writingArea').classList.add('visible');
             document.getElementById('modeText').textContent = 'Write Mode';
-            showStatus('Write mode unlocked! You can now add and delete letters.', 'success');
+            showStatus('Write mode unlocked!', 'success');
         }
 
         window.onclick = function(event) {
             const modal = document.getElementById('passwordModal');
-            if (event.target === modal) {
-                closePasswordModal();
-            }
+            if (event.target === modal) closePasswordModal();
         }
 
         function showStatus(message, type = 'loading') {
             const statusDiv = document.getElementById('status');
-            let typeClass = '';
-            if (type === 'loading') typeClass = 'status-loading';
-            if (type === 'error') typeClass = 'status-error';
-            if (type === 'success') typeClass = 'status-success';
-            
+            const typeClass = type === 'loading' ? 'status-loading' : (type === 'error' ? 'status-error' : 'status-success');
             statusDiv.innerHTML = `<div class="status ${typeClass}">${message}</div>`;
-            setTimeout(() => {
-                if (statusDiv.firstChild === statusDiv.firstChild) {
-                    statusDiv.innerHTML = '';
-                }
-            }, 3000);
+            setTimeout(() => { if (statusDiv.firstChild) statusDiv.innerHTML = ''; }, 3000);
         }
 
         async function saveToCloud(entries) {
             const response = await fetch(API_URL, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': API_KEY
-                },
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
                 body: JSON.stringify({ entries: entries })
             });
             return response.ok;
@@ -875,133 +708,80 @@
         async function loadEntries() {
             showStatus('Opening your letters...', 'loading');
             try {
-                const response = await fetch(API_URL, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
+                const response = await fetch(API_URL, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await response.json();
                 currentEntries = data.record.entries || [];
                 displayEntries();
-                const count = currentEntries.length;
-                showStatus(`${count} ${count === 1 ? 'letter' : 'letters'} saved`, 'success');
+                showStatus(`${currentEntries.length} ${currentEntries.length === 1 ? 'letter' : 'letters'} saved`, 'success');
             } catch (error) {
-                console.error(error);
-                showStatus('Could not load letters. Check your connection.', 'error');
+                showStatus('Could not load letters.', 'error');
             }
         }
 
         async function saveEntry() {
-            if (!isWriteMode) {
-                showStatus('Unlock write mode first', 'error');
-                return;
-            }
-            
+            if (!isWriteMode) { showStatus('Unlock write mode first', 'error'); return; }
             const title = document.getElementById('letterTitle').value.trim();
             const text = document.getElementById('diaryEntry').value;
-            
-            if (!text.trim()) {
-                showStatus('Write something before saving', 'error');
-                return;
-            }
-
-            const newEntry = {
-                id: Date.now(),
-                title: title || "Untitled letter",
-                date: new Date().toLocaleString(),
-                text: text
-            };
-
+            if (!text.trim()) { showStatus('Write something before saving', 'error'); return; }
+            const newEntry = { id: Date.now(), title: title || "Untitled letter", date: new Date().toLocaleString(), text: text };
             currentEntries.push(newEntry);
-            
-            showStatus('Saving your letter...', 'loading');
+            showStatus('Saving...', 'loading');
             try {
                 await saveToCloud(currentEntries);
                 document.getElementById('letterTitle').value = '';
                 document.getElementById('diaryEntry').value = '';
-                
-                // After saving, go to first page to see the new letter
-                if (currentSortOrder === 'newest') {
-                    currentPage = 1;
-                } else {
-                    // If sorting oldest first, go to last page
-                    const totalPages = Math.ceil(currentEntries.length / ITEMS_PER_PAGE);
-                    currentPage = totalPages;
-                }
+                if (currentSortOrder === 'newest') currentPage = 1;
+                else currentPage = getTotalPages();
                 displayEntries();
                 showStatus('Letter saved! Mrow!', 'success');
-            } catch (error) {
-                showStatus('Failed to save. Please try again.', 'error');
-            }
+            } catch (error) { showStatus('Failed to save.', 'error'); }
         }
 
-        async function deleteEntry(index) {
-            if (!isWriteMode) {
-                showStatus('Unlock write mode to delete letters', 'error');
-                return;
-            }
-            
-            // Get the actual entry from current page
-            const currentPageEntries = getCurrentPageEntries();
-            const actualEntry = currentPageEntries[index];
-            const actualIndex = currentEntries.findIndex(entry => entry.id === actualEntry.id);
-            
-            if (confirm('Delete this letter? This cannot be undone.')) {
+        async function deleteEntry(globalIndex) {
+            if (!isWriteMode) { showStatus('Unlock write mode first', 'error'); return; }
+            const sortedEntries = getSortedEntries();
+            const actualEntry = sortedEntries[globalIndex];
+            const actualIndex = currentEntries.findIndex(e => e.id === actualEntry.id);
+            if (confirm('Delete this letter?')) {
                 currentEntries.splice(actualIndex, 1);
-                showStatus('Removing letter...', 'loading');
                 try {
                     await saveToCloud(currentEntries);
-                    
-                    // Adjust current page if needed
                     const totalPages = getTotalPages();
-                    if (currentPage > totalPages && totalPages > 0) {
-                        currentPage = totalPages;
-                    } else if (totalPages === 0) {
-                        currentPage = 1;
-                    }
-                    
+                    if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+                    else if (totalPages === 0) currentPage = 1;
                     displayEntries();
                     showStatus('Letter deleted', 'success');
-                } catch (error) {
-                    showStatus('Delete failed. Please try again.', 'error');
-                    loadEntries();
-                }
+                } catch (error) { showStatus('Delete failed.', 'error'); }
             }
         }
 
         function displayEntries() {
             const container = document.getElementById('entriesList');
             if (currentEntries.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <p>No letters yet. Write your first unsent letter above.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No letters yet. Write your first unsent letter above.</p></div>`;
                 updatePaginationControls();
                 return;
             }
             
-            const currentPageEntries = getCurrentPageEntries();
+            const sortedEntries = getSortedEntries();
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const pageEntries = sortedEntries.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+            const globalStartIndex = startIndex;
             
-            if (currentPageEntries.length === 0 && currentPage > 1) {
-                // If current page has no entries, go to last page
-                currentPage = getTotalPages();
-                displayEntries();
-                return;
-            }
-            
-            container.innerHTML = currentPageEntries.map((entry, displayIndex) => `
-                <div class="letter-entry">
-                    <div class="letter-meta">
-                        <div class="letter-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
-                        <div class="letter-date-display">📅 ${entry.date}</div>
+            container.innerHTML = pageEntries.map((entry, idx) => {
+                const globalIndex = globalStartIndex + idx;
+                const preview = getPreviewText(entry.text, 100);
+                return `
+                    <div class="letter-preview" onclick="openLetter(${globalIndex})">
+                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
+                        <div class="preview-date">📅 ${entry.date}</div>
+                        <div class="preview-excerpt">${escapeHtml(preview)}</div>
+                        <div class="action-buttons">
+                            <button class="delete-btn" onclick="event.stopPropagation(); deleteEntry(${globalIndex})">Delete</button>
+                        </div>
                     </div>
-                    <div class="letter-content">${escapeHtml(entry.text).replace(/\n/g, '<br>')}</div>
-                    <div class="action-buttons">
-                        <button class="delete-btn" onclick="deleteEntry(${displayIndex})">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-            
+                `;
+            }).join('');
             updatePaginationControls();
         }
 
@@ -1011,7 +791,6 @@
             return div.innerHTML;
         }
 
-        // Load entries when page opens
         loadEntries();
     </script>
 </body>
