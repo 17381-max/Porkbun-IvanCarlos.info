@@ -5,36 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>₍^. .^₎⟆</title>
     <style>
-        body {
-    font-family: 'Georgia', serif;
-    max-width: 650px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #e8e0d0;
+       body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: 680px;
+    margin: 60px auto;
+    padding: 0 20px;
+    background: #ffffff;
 }
 .diary-entry {
-    background: #fffef5;
-    padding: 40px;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border: 1px solid #d4c9b0;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+}
+textarea {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
 }
 .entry {
-    background: transparent;
-    border-bottom: 1px dashed #d4c9b0;
-    padding: 20px 0;
-    margin: 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 12px 0;
 }
-.entry strong {
-    font-family: 'Courier New', monospace;
-    color: #8B7355;
-    font-size: 11px;
+button {
+    background-color: #212529;
+    border-radius: 6px;
+}
+.delete-btn {
+    background-color: #dc3545;
 }
     </style>
 </head>
 <body>
     <div class="diary-entry">
-        <h2>Letters for elisa</h2>
+        <h2>₍^. .^₎⟆</h2>
         <div id="status"></div>
         <div id="currentDate" style="color:#999; font-size:12px;"></div>
         <textarea id="diaryEntry" rows="8" placeholder="Write your thoughts here..."></textarea>
