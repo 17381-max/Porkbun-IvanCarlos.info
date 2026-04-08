@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>letters for elisa</title>
+    <title>₍^. .^₎⟆</title>
     <style>
         * {
             margin: 0;
@@ -62,7 +62,101 @@
             letter-spacing: 1px;
         }
 
-        /* Date line - like a letter */
+        /* Mode toggle area */
+        .mode-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .mode-badge {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 11px;
+            background: #f0ebe4;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #8b6f54;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .unlock-btn {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .unlock-btn:hover {
+            background: #f0ebe4;
+        }
+
+        /* Password modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .password-modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            max-width: 320px;
+            text-align: center;
+            border: 1px solid #ece4d8;
+        }
+
+        .password-modal-content h3 {
+            font-family: 'Georgia', serif;
+            color: #3d2b1a;
+            margin-bottom: 20px;
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 16px;
+            border: 1px solid #e2d6ca;
+            border-radius: 40px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .password-modal-content input:focus {
+            outline: none;
+            border-color: #b8a28c;
+        }
+
+        .password-modal-content button {
+            background: #d4c3ae;
+            color: #2c221a;
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .password-error {
+            color: #b86b52;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* Date line */
         .letter-date {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 12px;
@@ -76,6 +170,11 @@
         /* Writing area */
         .writing-area {
             margin-bottom: 32px;
+            display: none;
+        }
+
+        .writing-area.visible {
+            display: block;
         }
 
         .greeting {
@@ -84,6 +183,32 @@
             color: #3d2b1a;
             margin-bottom: 16px;
             font-weight: 500;
+        }
+
+        .title-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid #e2d6ca;
+            background: #fefcf9;
+            border-radius: 12px;
+            margin: 8px 0;
+            color: #2c221a;
+        }
+
+        .title-input:focus {
+            outline: none;
+            border-color: #b8a28c;
+            background: #ffffff;
+        }
+
+        .title-input::placeholder {
+            color: #c9bcab;
+            font-style: italic;
+            font-size: 14px;
+            font-weight: normal;
         }
 
         textarea {
@@ -203,10 +328,45 @@
             gap: 10px;
         }
 
+        .letter-title {
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            font-weight: 500;
+            color: #3d2b1a;
+            flex: 1;
+        }
+
         .letter-date-display {
             font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             color: #b8a28c;
+        }
+
+        .reorder-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .reorder-btn {
+            background: transparent;
+            border: 1px solid #e8ddd2;
+            color: #bfaa95;
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .reorder-btn:hover:not(:disabled) {
+            background: #f5ede6;
+            border-color: #d4bba4;
+            color: #a07754;
+            transform: none;
+        }
+
+        .reorder-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
 
         .delete-btn {
@@ -231,6 +391,19 @@
             line-height: 1.75;
             color: #3a3028;
             white-space: pre-wrap;
+        }
+
+        /* Hidden action buttons in read mode */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            gap: 8px;
+        }
+
+        body.read-mode .action-buttons {
+            display: none;
         }
 
         /* Empty state */
@@ -278,6 +451,9 @@
             .letter-entry {
                 padding: 20px;
             }
+            .letter-title {
+                font-size: 16px;
+            }
             .button-group button {
                 padding: 8px 16px;
                 font-size: 13px;
@@ -285,19 +461,40 @@
         }
     </style>
 </head>
-<body>
+<body class="read-mode">
     <div class="container">
         <div class="diary-entry">
             <div class="header">
                 <div class="envelope-icon">✉️</div>
                 <h1>₍^. .^₎⟆</h1>
-                <div class="tagline">For my best friend</div>
+                <div class="tagline">For my friend</div>
+            </div>
+
+            <!-- Mode area -->
+            <div class="mode-area">
+                <div class="mode-badge">
+                    <span id="modeIcon">📖</span>
+                    <span id="modeText">Read Only</span>
+                    <button class="unlock-btn" onclick="showPasswordModal()">Unlock</button>
+                </div>
+            </div>
+
+            <!-- Password Modal -->
+            <div id="passwordModal" class="password-modal">
+                <div class="password-modal-content">
+                    <h3>Enter Password</h3>
+                    <input type="password" id="passwordInput" placeholder="password" autocomplete="off">
+                    <button onclick="checkPassword()">Unlock Write Mode</button>
+                    <div id="passwordError" class="password-error"></div>
+                </div>
             </div>
 
             <div class="letter-date" id="currentDate"></div>
 
-            <div class="writing-area">
+            <!-- Writing area (hidden until unlocked) -->
+            <div id="writingArea" class="writing-area">
                 <div class="greeting">Dear friend,</div>
+                <input type="text" id="letterTitle" class="title-input" placeholder="Letter title (optional)">
                 <textarea id="diaryEntry" rows="7" placeholder="Write here..."></textarea>
                 <div class="button-group">
                     <button class="btn-primary" onclick="saveEntry()">Save</button>
@@ -308,20 +505,24 @@
             <div id="status"></div>
 
             <div class="entries-section">
-                <div class="section-title">Saved Letters</div>
+                <div class="section-title">Saved Letters 😼</div>
                 <div id="entriesList"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // 🔑 YOUR JSONBIN.IO CREDENTIALS - REPLACE THESE
+        // 🔐 SET YOUR PASSWORD HERE
+        const WRITE_PASSWORD = "KeyLock"; // Change this to your password!
+        
+        // JSONBin credentials
         const BIN_ID = "69d5b340856a6821890cdbfd";      
         const API_KEY = "$2a$10$C32wnSCGBNKjDww3OFHAtedCX0dUnscUKzf8ZS8F65GeyLo1bgF6C";
         
         const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
         
         let currentEntries = [];
+        let isWriteMode = false;
 
         // Set current date
         const today = new Date();
@@ -331,6 +532,42 @@
             month: 'long', 
             day: 'numeric' 
         });
+
+        function showPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'flex';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === WRITE_PASSWORD) {
+                closePasswordModal();
+                enableWriteMode();
+            } else {
+                document.getElementById('passwordError').textContent = 'Incorrect password';
+            }
+        }
+
+        function enableWriteMode() {
+            isWriteMode = true;
+            document.body.classList.remove('read-mode');
+            document.getElementById('writingArea').classList.add('visible');
+            document.getElementById('modeText').textContent = 'Write Mode';
+            showStatus('Write mode unlocked! You can now add, reorder, and delete letters.', 'success');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target === modal) {
+                closePasswordModal();
+            }
+        }
 
         function showStatus(message, type = 'loading') {
             const statusDiv = document.getElementById('status');
@@ -377,13 +614,22 @@
         }
 
         async function saveEntry() {
+            if (!isWriteMode) {
+                showStatus('Unlock write mode first', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('letterTitle').value.trim();
             const text = document.getElementById('diaryEntry').value;
+            
             if (!text.trim()) {
                 showStatus('Write something before saving', 'error');
                 return;
             }
 
             const newEntry = {
+                id: Date.now(),
+                title: title || "Untitled letter",
                 date: new Date().toLocaleString(),
                 text: text
             };
@@ -393,15 +639,44 @@
             showStatus('Saving your letter...', 'loading');
             try {
                 await saveToCloud(currentEntries);
+                document.getElementById('letterTitle').value = '';
                 document.getElementById('diaryEntry').value = '';
                 displayEntries();
-                showStatus('Letter saved ✨', 'success');
+                showStatus('Letter saved! Mrow!', 'success');
             } catch (error) {
                 showStatus('Failed to save. Please try again.', 'error');
             }
         }
 
+        async function moveLetter(index, direction) {
+            if (!isWriteMode) {
+                showStatus('Unlock write mode to reorder letters', 'error');
+                return;
+            }
+            
+            const newIndex = direction === 'up' ? index - 1 : index + 1;
+            
+            if (newIndex < 0 || newIndex >= currentEntries.length) return;
+            
+            [currentEntries[index], currentEntries[newIndex]] = [currentEntries[newIndex], currentEntries[index]];
+            
+            showStatus('Reordering letters...', 'loading');
+            try {
+                await saveToCloud(currentEntries);
+                displayEntries();
+                showStatus('Letters reordered!', 'success');
+            } catch (error) {
+                showStatus('Reorder failed. Please try again.', 'error');
+                loadEntries();
+            }
+        }
+
         async function deleteEntry(index) {
+            if (!isWriteMode) {
+                showStatus('Unlock write mode to delete letters', 'error');
+                return;
+            }
+            
             if (confirm('Delete this letter? This cannot be undone.')) {
                 currentEntries.splice(index, 1);
                 showStatus('Removing letter...', 'loading');
@@ -431,15 +706,21 @@
             container.innerHTML = currentEntries.map((entry, index) => `
                 <div class="letter-entry">
                     <div class="letter-meta">
-                        <span class="letter-date-display">📅 ${entry.date}</span>
-                        <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+                        <div class="letter-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
+                        <div class="letter-date-display">📅 ${entry.date}</div>
                     </div>
                     <div class="letter-content">${escapeHtml(entry.text).replace(/\n/g, '<br>')}</div>
+                    <div class="action-buttons">
+                        <div class="reorder-buttons">
+                            <button class="reorder-btn" onclick="moveLetter(${index}, 'up')" ${index === 0 ? 'disabled' : ''}>↑</button>
+                            <button class="reorder-btn" onclick="moveLetter(${index}, 'down')" ${index === currentEntries.length - 1 ? 'disabled' : ''}>↓</button>
+                        </div>
+                        <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        // Simple helper to prevent HTML injection
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
