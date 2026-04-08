@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Diary</title>
+    <title>Letters to elisa</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -11,30 +11,13 @@
             margin: 40px auto;
             padding: 20px;
             background-color: #faf9f8;
-            color: #333;
         }
-        
         .diary-entry {
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
         }
-        
-        .date {
-            font-size: 12px;
-            color: #999;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .entry-content {
-            line-height: 1.6;
-            font-size: 16px;
-        }
-        
         textarea {
             width: 100%;
             padding: 10px;
@@ -44,7 +27,6 @@
             border-radius: 4px;
             margin: 10px 0;
         }
-        
         button {
             background-color: #4CAF50;
             color: white;
@@ -53,89 +35,121 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        
-        button:hover {
-            background-color: #45a049;
-        }
-        
-        .saved-entries {
-            margin-top: 30px;
-        }
-        
-        .old-entry {
+        .entry {
             background: #f5f5f5;
             padding: 15px;
             margin: 10px 0;
             border-radius: 4px;
         }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .loading { background: #e3f2fd; color: #1976d2; }
+        .error { background: #ffebee; color: #c62828; }
     </style>
 </head>
 <body>
     <div class="diary-entry">
-        <h2>📔 My Private Diary</h2>
-        <div class="date" id="currentDate"></div>
-        
-        <div class="entry-content">
-            <textarea id="diaryEntry" rows="8" placeholder="Write your thoughts here..."></textarea>
-            <button onclick="saveEntry()">Save Entry</button>
-        </div>
-        
-        <div class="saved-entries">
-            <h3>Previous Entries</h3>
-            <div id="entriesList"></div>
-        </div>
+        <h2>Letters for elisa</h2>
+        <div id="status"></div>
+        <div id="currentDate" style="color:#999; font-size:12px;"></div>
+        <textarea id="diaryEntry" rows="8" placeholder="Write your thoughts here..."></textarea>
+        <button onclick="saveEntry()">Save to Cloud</button>
+        <button onclick="loadEntries()" style="background-color:#2196F3;">Refresh</button>
+        <div id="entriesList" style="margin-top:30px;"></div>
     </div>
 
     <script>
-        // Display current date
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-        document.getElementById('currentDate').textContent = formattedDate;
         
-        // Load saved entries
-        function loadEntries() {
-            const entries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
-            const entriesList = document.getElementById('entriesList');
-            
-            if (entries.length === 0) {
-                entriesList.innerHTML = '<p>No entries yet. Write your first one above!</p>';
+        const BIN_ID = "69d5b340856a6821890cdbfd";
+        const API_KEY = "$2a$10$C32wnSCGBNKjDww3OFHAtedCX0dUnscUKzf8ZS8F65GeyLo1bgF6C";
+        
+        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        
+        let currentEntries = [];
+
+        // Show current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+        });
+
+        function showStatus(message, type = 'loading') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => {
+                if (document.getElementById('status').firstChild === statusDiv.firstChild) {
+                    statusDiv.innerHTML = '';
+                }
+            }, 3000);
+        }
+
+        // Load entries from cloud
+        async function loadEntries() {
+            showStatus('Loading from cloud...', 'loading');
+            try {
+                const response = await fetch(API_URL, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const data = await response.json();
+                currentEntries = data.record.entries || [];
+                displayEntries();
+                showStatus(`Loaded ${currentEntries.length} entries`, 'loading');
+            } catch (error) {
+                console.error(error);
+                showStatus('Failed to load. Check your BIN_ID and API_KEY', 'error');
+            }
+        }
+
+        // Save entry to cloud
+        async function saveEntry() {
+            const text = document.getElementById('diaryEntry').value;
+            if (!text.trim()) {
+                showStatus('Please write something first!', 'error');
                 return;
             }
+
+            const newEntry = {
+                date: new Date().toLocaleString(),
+                text: text
+            };
+
+            currentEntries.unshift(newEntry);
             
-            entriesList.innerHTML = entries.reverse().map(entry => `
-                <div class="old-entry">
+            showStatus('Saving to cloud...', 'loading');
+            try {
+                await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify({ entries: currentEntries })
+                });
+                document.getElementById('diaryEntry').value = '';
+                displayEntries();
+                showStatus('Saved to cloud!', 'loading');
+            } catch (error) {
+                showStatus('Save failed. Check your connection.', 'error');
+            }
+        }
+
+        function displayEntries() {
+            const container = document.getElementById('entriesList');
+            if (currentEntries.length === 0) {
+                container.innerHTML = '<p>No entries yet. Write your first one!</p>';
+                return;
+            }
+            container.innerHTML = currentEntries.map(entry => `
+                <div class="entry">
                     <strong>${entry.date}</strong>
-                    <p style="margin-top: 10px;">${entry.text.replace(/\n/g, '<br>')}</p>
+                    <p style="margin-top:10px;">${entry.text.replace(/\n/g, '<br>')}</p>
                 </div>
             `).join('');
         }
-        
-        // Save new entry
-        function saveEntry() {
-            const entryText = document.getElementById('diaryEntry').value;
-            if (!entryText.trim()) {
-                alert('Please write something before saving!');
-                return;
-            }
-            
-            const entries = JSON.parse(localStorage.getItem('diaryEntries') || '[]');
-            entries.push({
-                date: formattedDate + ' ' + new Date().toLocaleTimeString(),
-                text: entryText
-            });
-            
-            localStorage.setItem('diaryEntries', JSON.stringify(entries));
-            document.getElementById('diaryEntry').value = '';
-            loadEntries();
-            alert('Entry saved!');
-        }
-        
-        // Load entries on page load
+
+        // Load entries when page opens
         loadEntries();
     </script>
 </body>
