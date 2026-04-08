@@ -413,6 +413,111 @@
             transform: none;
         }
 
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #f0e8e0;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #f0ebe4;
+            border-color: #c4b094;
+            color: #5c4430;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-number {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 30px;
+            color: #a0846a;
+            cursor: pointer;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .page-number.active {
+            background: #d4c3ae;
+            color: #2c221a;
+            border-color: #c4b094;
+        }
+
+        .page-number:hover:not(.active) {
+            background: #f0ebe4;
+        }
+
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 8px;
+        }
+
+        .page-jump input {
+            width: 60px;
+            padding: 6px 8px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #e2d6ca;
+            border-radius: 30px;
+            text-align: center;
+        }
+
+        .page-jump input:focus {
+            outline: none;
+            border-color: #b8a28c;
+        }
+
+        .page-jump button {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .page-jump button:hover {
+            background: #f0ebe4;
+        }
+
+        .page-info {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 11px;
+            color: #b8a28c;
+            margin-right: 8px;
+        }
+
         /* Empty state */
         .empty-state {
             text-align: center;
@@ -475,6 +580,13 @@
             .mode-badge {
                 justify-content: center;
             }
+            .pagination {
+                flex-direction: column;
+                align-items: center;
+            }
+            .page-jump {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -528,13 +640,28 @@
             <div class="entries-section">
                 <div class="section-title">Saved Messages 😼</div>
                 <div id="entriesList"></div>
+                
+                <!-- Pagination controls -->
+                <div id="paginationControls" class="pagination" style="display: none;">
+                    <button class="pagination-btn" id="prevPageBtn" onclick="goToPreviousPage()">← Previous</button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button class="pagination-btn" id="nextPageBtn" onclick="goToNextPage()">Next →</button>
+                    <div class="page-jump">
+                        <span class="page-info">Go to page</span>
+                        <input type="number" id="pageNumberInput" min="1" value="1">
+                        <button onclick="goToPage()">Go</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         // 🔐 SET YOUR PASSWORD HERE
-        const WRITE_PASSWORD = "KeyLock"; // Change this to your password!
+        const WRITE_PASSWORD = "KeyLock";
+        
+        // Pagination settings
+        const ITEMS_PER_PAGE = 3;
         
         // JSONBin credentials
         const BIN_ID = "69d5b340856a6821890cdbfd";      
@@ -544,7 +671,8 @@
         
         let currentEntries = [];
         let isWriteMode = false;
-        let currentSortOrder = 'newest'; // 'newest' or 'oldest'
+        let currentSortOrder = 'newest';
+        let currentPage = 1;
 
         // Set current date
         const today = new Date();
@@ -557,8 +685,8 @@
 
         function setSortOrder(order) {
             currentSortOrder = order;
+            currentPage = 1; // Reset to first page when sorting changes
             
-            // Update button styles
             const newestBtn = document.getElementById('sortNewestBtn');
             const oldestBtn = document.getElementById('sortOldestBtn');
             
@@ -578,12 +706,108 @@
         function getSortedEntries() {
             const sorted = [...currentEntries];
             if (currentSortOrder === 'newest') {
-                // Sort by date descending (newest first)
                 return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
             } else {
-                // Sort by date ascending (oldest first)
                 return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
             }
+        }
+
+        function getCurrentPageEntries() {
+            const sortedEntries = getSortedEntries();
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            return sortedEntries.slice(startIndex, endIndex);
+        }
+
+        function getTotalPages() {
+            return Math.ceil(currentEntries.length / ITEMS_PER_PAGE);
+        }
+
+        function updatePaginationControls() {
+            const totalPages = getTotalPages();
+            const paginationDiv = document.getElementById('paginationControls');
+            const pageNumbersDiv = document.getElementById('pageNumbers');
+            
+            if (totalPages <= 1) {
+                paginationDiv.style.display = 'none';
+                return;
+            }
+            
+            paginationDiv.style.display = 'flex';
+            
+            // Update Previous/Next buttons
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // Generate page numbers
+            let pageNumbersHtml = '';
+            
+            // Show limited page numbers for cleaner display
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            // Add first page if not in range
+            if (startPage > 1) {
+                pageNumbersHtml += `<button class="page-number" onclick="goToPageNumber(1)">1</button>`;
+                if (startPage > 2) {
+                    pageNumbersHtml += `<span class="page-info" style="margin: 0 4px;">...</span>`;
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbersHtml += `<button class="page-number ${i === currentPage ? 'active' : ''}" onclick="goToPageNumber(${i})">${i}</button>`;
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pageNumbersHtml += `<span class="page-info" style="margin: 0 4px;">...</span>`;
+                }
+                pageNumbersHtml += `<button class="page-number" onclick="goToPageNumber(${totalPages})">${totalPages}</button>`;
+            }
+            
+            pageNumbersDiv.innerHTML = pageNumbersHtml;
+            
+            // Update page input
+            const pageInput = document.getElementById('pageNumberInput');
+            pageInput.value = currentPage;
+            pageInput.max = totalPages;
+        }
+
+        function goToPageNumber(page) {
+            const totalPages = getTotalPages();
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            displayEntries();
+        }
+
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayEntries();
+            }
+        }
+
+        function goToNextPage() {
+            const totalPages = getTotalPages();
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayEntries();
+            }
+        }
+
+        function goToPage() {
+            const input = document.getElementById('pageNumberInput');
+            let page = parseInt(input.value);
+            const totalPages = getTotalPages();
+            
+            if (isNaN(page)) page = 1;
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+            
+            currentPage = page;
+            displayEntries();
         }
 
         function showPasswordModal() {
@@ -614,7 +838,6 @@
             showStatus('Write mode unlocked! You can now add and delete letters.', 'success');
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('passwordModal');
             if (event.target === modal) {
@@ -694,6 +917,15 @@
                 await saveToCloud(currentEntries);
                 document.getElementById('letterTitle').value = '';
                 document.getElementById('diaryEntry').value = '';
+                
+                // After saving, go to first page to see the new letter
+                if (currentSortOrder === 'newest') {
+                    currentPage = 1;
+                } else {
+                    // If sorting oldest first, go to last page
+                    const totalPages = Math.ceil(currentEntries.length / ITEMS_PER_PAGE);
+                    currentPage = totalPages;
+                }
                 displayEntries();
                 showStatus('Letter saved! Mrow!', 'success');
             } catch (error) {
@@ -707,9 +939,9 @@
                 return;
             }
             
-            // Get the actual entry from original array using the displayed index
-            const sortedEntries = getSortedEntries();
-            const actualEntry = sortedEntries[index];
+            // Get the actual entry from current page
+            const currentPageEntries = getCurrentPageEntries();
+            const actualEntry = currentPageEntries[index];
             const actualIndex = currentEntries.findIndex(entry => entry.id === actualEntry.id);
             
             if (confirm('Delete this letter? This cannot be undone.')) {
@@ -717,6 +949,15 @@
                 showStatus('Removing letter...', 'loading');
                 try {
                     await saveToCloud(currentEntries);
+                    
+                    // Adjust current page if needed
+                    const totalPages = getTotalPages();
+                    if (currentPage > totalPages && totalPages > 0) {
+                        currentPage = totalPages;
+                    } else if (totalPages === 0) {
+                        currentPage = 1;
+                    }
+                    
                     displayEntries();
                     showStatus('Letter deleted', 'success');
                 } catch (error) {
@@ -735,12 +976,20 @@
                         <p>No letters yet. Write your first unsent letter above.</p>
                     </div>
                 `;
+                updatePaginationControls();
                 return;
             }
             
-            const sortedEntries = getSortedEntries();
+            const currentPageEntries = getCurrentPageEntries();
             
-            container.innerHTML = sortedEntries.map((entry, displayIndex) => `
+            if (currentPageEntries.length === 0 && currentPage > 1) {
+                // If current page has no entries, go to last page
+                currentPage = getTotalPages();
+                displayEntries();
+                return;
+            }
+            
+            container.innerHTML = currentPageEntries.map((entry, displayIndex) => `
                 <div class="letter-entry">
                     <div class="letter-meta">
                         <div class="letter-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
@@ -752,6 +1001,8 @@
                     </div>
                 </div>
             `).join('');
+            
+            updatePaginationControls();
         }
 
         function escapeHtml(text) {
