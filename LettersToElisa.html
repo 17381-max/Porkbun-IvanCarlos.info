@@ -65,9 +65,43 @@
         /* Mode toggle area */
         .mode-area {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            position: relative;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sort-control {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 11px;
+            background: #f0ebe4;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #8b6f54;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sort-btn {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .sort-btn.active {
+            background: #d4c3ae;
+            color: #2c221a;
+            border-color: #c4b094;
+        }
+
+        .sort-btn:hover:not(.active) {
+            background: #e6dfd6;
         }
 
         .mode-badge {
@@ -342,31 +376,25 @@
             color: #b8a28c;
         }
 
-        .reorder-buttons {
+        .letter-content {
+            font-family: 'Georgia', serif;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #3a3028;
+            white-space: pre-wrap;
+        }
+
+        /* Hidden action buttons in read mode */
+        .action-buttons {
             display: flex;
-            gap: 6px;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 16px;
+            gap: 8px;
         }
 
-        .reorder-btn {
-            background: transparent;
-            border: 1px solid #e8ddd2;
-            color: #bfaa95;
-            font-size: 14px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .reorder-btn:hover:not(:disabled) {
-            background: #f5ede6;
-            border-color: #d4bba4;
-            color: #a07754;
-            transform: none;
-        }
-
-        .reorder-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        body.read-mode .action-buttons {
+            display: none;
         }
 
         .delete-btn {
@@ -383,27 +411,6 @@
             border-color: #d4bba4;
             color: #a07754;
             transform: none;
-        }
-
-        .letter-content {
-            font-family: 'Georgia', serif;
-            font-size: 15px;
-            line-height: 1.75;
-            color: #3a3028;
-            white-space: pre-wrap;
-        }
-
-        /* Hidden action buttons in read mode */
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 16px;
-            gap: 8px;
-        }
-
-        body.read-mode .action-buttons {
-            display: none;
         }
 
         /* Empty state */
@@ -458,6 +465,16 @@
                 padding: 8px 16px;
                 font-size: 13px;
             }
+            .mode-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .sort-control {
+                justify-content: center;
+            }
+            .mode-badge {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -470,10 +487,14 @@
                 <div class="tagline">For my friend</div>
             </div>
 
-            <!-- Mode area -->
+            <!-- Mode area with sort controls -->
             <div class="mode-area">
+                <div class="sort-control">
+                    <span>📖 Sort by:</span>
+                    <button id="sortNewestBtn" class="sort-btn active" onclick="setSortOrder('newest')">Newest First</button>
+                    <button id="sortOldestBtn" class="sort-btn" onclick="setSortOrder('oldest')">Oldest First</button>
+                </div>
                 <div class="mode-badge">
-                    <span id="modeIcon">📖</span>
                     <span id="modeText">Read Only</span>
                     <button class="unlock-btn" onclick="showPasswordModal()">Unlock</button>
                 </div>
@@ -523,6 +544,7 @@
         
         let currentEntries = [];
         let isWriteMode = false;
+        let currentSortOrder = 'newest'; // 'newest' or 'oldest'
 
         // Set current date
         const today = new Date();
@@ -532,6 +554,37 @@
             month: 'long', 
             day: 'numeric' 
         });
+
+        function setSortOrder(order) {
+            currentSortOrder = order;
+            
+            // Update button styles
+            const newestBtn = document.getElementById('sortNewestBtn');
+            const oldestBtn = document.getElementById('sortOldestBtn');
+            
+            if (order === 'newest') {
+                newestBtn.classList.add('active');
+                oldestBtn.classList.remove('active');
+                showStatus('Showing newest letters first', 'success');
+            } else {
+                oldestBtn.classList.add('active');
+                newestBtn.classList.remove('active');
+                showStatus('Showing oldest letters first', 'success');
+            }
+            
+            displayEntries();
+        }
+
+        function getSortedEntries() {
+            const sorted = [...currentEntries];
+            if (currentSortOrder === 'newest') {
+                // Sort by date descending (newest first)
+                return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else {
+                // Sort by date ascending (oldest first)
+                return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+        }
 
         function showPasswordModal() {
             document.getElementById('passwordModal').style.display = 'flex';
@@ -558,7 +611,7 @@
             document.body.classList.remove('read-mode');
             document.getElementById('writingArea').classList.add('visible');
             document.getElementById('modeText').textContent = 'Write Mode';
-            showStatus('Write mode unlocked! You can now add, reorder, and delete letters.', 'success');
+            showStatus('Write mode unlocked! You can now add and delete letters.', 'success');
         }
 
         // Close modal when clicking outside
@@ -634,7 +687,7 @@
                 text: text
             };
 
-            currentEntries.unshift(newEntry);
+            currentEntries.push(newEntry);
             
             showStatus('Saving your letter...', 'loading');
             try {
@@ -648,37 +701,19 @@
             }
         }
 
-        async function moveLetter(index, direction) {
-            if (!isWriteMode) {
-                showStatus('Unlock write mode to reorder letters', 'error');
-                return;
-            }
-            
-            const newIndex = direction === 'up' ? index - 1 : index + 1;
-            
-            if (newIndex < 0 || newIndex >= currentEntries.length) return;
-            
-            [currentEntries[index], currentEntries[newIndex]] = [currentEntries[newIndex], currentEntries[index]];
-            
-            showStatus('Reordering letters...', 'loading');
-            try {
-                await saveToCloud(currentEntries);
-                displayEntries();
-                showStatus('Letters reordered!', 'success');
-            } catch (error) {
-                showStatus('Reorder failed. Please try again.', 'error');
-                loadEntries();
-            }
-        }
-
         async function deleteEntry(index) {
             if (!isWriteMode) {
                 showStatus('Unlock write mode to delete letters', 'error');
                 return;
             }
             
+            // Get the actual entry from original array using the displayed index
+            const sortedEntries = getSortedEntries();
+            const actualEntry = sortedEntries[index];
+            const actualIndex = currentEntries.findIndex(entry => entry.id === actualEntry.id);
+            
             if (confirm('Delete this letter? This cannot be undone.')) {
-                currentEntries.splice(index, 1);
+                currentEntries.splice(actualIndex, 1);
                 showStatus('Removing letter...', 'loading');
                 try {
                     await saveToCloud(currentEntries);
@@ -703,7 +738,9 @@
                 return;
             }
             
-            container.innerHTML = currentEntries.map((entry, index) => `
+            const sortedEntries = getSortedEntries();
+            
+            container.innerHTML = sortedEntries.map((entry, displayIndex) => `
                 <div class="letter-entry">
                     <div class="letter-meta">
                         <div class="letter-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
@@ -711,11 +748,7 @@
                     </div>
                     <div class="letter-content">${escapeHtml(entry.text).replace(/\n/g, '<br>')}</div>
                     <div class="action-buttons">
-                        <div class="reorder-buttons">
-                            <button class="reorder-btn" onclick="moveLetter(${index}, 'up')" ${index === 0 ? 'disabled' : ''}>↑</button>
-                            <button class="reorder-btn" onclick="moveLetter(${index}, 'down')" ${index === currentEntries.length - 1 ? 'disabled' : ''}>↓</button>
-                        </div>
-                        <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+                        <button class="delete-btn" onclick="deleteEntry(${displayIndex})">Delete</button>
                     </div>
                 </div>
             `).join('');
