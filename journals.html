@@ -535,6 +535,7 @@
                     <button id="sortOldestBtn" class="sort-btn" onclick="setSortOrder('oldest')">Oldest First</button>
                 </div>
                 <div class="mode-control">
+                    <span>Mode:</span>
                     <button id="readModeBtn" class="mode-btn active" onclick="switchToReadMode()">Read</button>
                     <button id="writeModeBtn" class="mode-btn" onclick="requestWriteMode()">Write</button>
                 </div>
@@ -563,7 +564,7 @@
             <div id="status"></div>
 
             <div class="entries-section">
-                <div class="section-title">Saved Journals 😼</div>
+                <div class="section-title">saved journals 😼</div>
                 <div id="entriesList"></div>
                 
                 <div id="paginationControls" class="pagination" style="display: none;">
@@ -701,7 +702,7 @@
             if (Journal) {
                 localStorage.setItem('allJournals', JSON.stringify(currentEntries));
                 localStorage.setItem('currentSortOrder', currentSortOrder);
-                window.location.href = `JournalEntry.html?id=${Journal.id}&index=${globalIndex}`;
+                window.location.href = `journalentry.html?id=${Journal.id}&index=${globalIndex}`;
             }
         }
 
