@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>₍^. .^₎⟆ - Letter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Georgia', serif;
+            background: #f7f4ef;
+            min-height: 100vh;
+            padding: 50px 24px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .letter-container {
+            background: #ffffff;
+            padding: 56px 64px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            border: 1px solid #ece4d8;
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 32px;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #b8a28c;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #8b6f54;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #ede6dc;
+        }
+
+        .envelope-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+
+        .letter-title {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #3d2b1a;
+            margin-bottom: 12px;
+        }
+
+        .letter-date {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #b8a28c;
+        }
+
+        .letter-body {
+            font-family: 'Georgia', serif;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #3a3028;
+            margin: 40px 0;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #f0e8e0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 13px;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #a0846a;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #f0ebe4;
+            border-color: #c4b094;
+            color: #5c4430;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-jump input {
+            width: 60px;
+            padding: 6px 8px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #e2d6ca;
+            border-radius: 30px;
+            text-align: center;
+        }
+
+        .page-info {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #b8a28c;
+        }
+
+        .small-btn {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .small-btn:hover {
+            background: #f0ebe4;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 24px 16px; }
+            .letter-container { padding: 32px 24px; }
+            .letter-title { font-size: 22px; }
+            .letter-body { font-size: 15px; }
+            .navigation { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="letter-container">
+            <a href="LettersToElisa.html" class="back-link">← Back to all letters</a>
+            
+            <div class="letter-header">
+                <div class="envelope-icon">✉️</div>
+                <div class="letter-title" id="letterTitle">Loading...</div>
+                <div class="letter-date" id="letterDate"></div>
+            </div>
+            
+            <div class="letter-body" id="letterBody">Loading...</div>
+            
+            <div class="navigation">
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prevBtn" onclick="navigateLetter(-1)">← Previous</button>
+                    <button class="nav-btn" id="nextBtn" onclick="navigateLetter(1)">Next →</button>
+                </div>
+                <div class="page-controls">
+                    <span class="page-info">Letter <span id="currentPos">0</span> of <span id="totalLetters">0</span></span>
+                    <div class="page-jump">
+                        <span class="page-info">Go to #</span>
+                        <input type="number" id="letterNumberInput" min="1">
+                        <button class="small-btn" onclick="goToLetterNumber()">Go</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allLetters = [];
+        let currentIndex = 0;
+        let currentSortOrder = 'newest';
+
+        function getSortedLetters() {
+            const sorted = [...allLetters];
+            if (currentSortOrder === 'newest') {
+                return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else {
+                return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+        }
+
+        function loadLetter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const letterId = parseInt(urlParams.get('id'));
+            const indexParam = parseInt(urlParams.get('index'));
+            
+            // Load letters from localStorage (set by main page)
+            const storedLetters = localStorage.getItem('allLetters');
+            const storedSortOrder = localStorage.getItem('currentSortOrder');
+            
+            if (storedLetters) {
+                allLetters = JSON.parse(storedLetters);
+            }
+            if (storedSortOrder) {
+                currentSortOrder = storedSortOrder;
+            }
+            
+            if (allLetters.length === 0) {
+                document.getElementById('letterTitle').textContent = 'No letters found';
+                document.getElementById('letterBody').textContent = 'Please go back and refresh the main page.';
+                return;
+            }
+            
+            const sortedLetters = getSortedLetters();
+            
+            // Find the letter by ID or index
+            if (!isNaN(letterId)) {
+                currentIndex = sortedLetters.findIndex(l => l.id === letterId);
+            } else if (!isNaN(indexParam) && indexParam >= 0 && indexParam < sortedLetters.length) {
+                currentIndex = indexParam;
+            }
+            
+            if (currentIndex === -1) currentIndex = 0;
+            
+            displayCurrentLetter();
+            updateNavigation();
+        }
+
+        function displayCurrentLetter() {
+            const sortedLetters = getSortedLetters();
+            const letter = sortedLetters[currentIndex];
+            
+            if (letter) {
+                document.getElementById('letterTitle').textContent = letter.title || 'Untitled letter';
+                document.getElementById('letterDate').textContent = `📅 ${letter.date}`;
+                document.getElementById('letterBody').innerHTML = escapeHtml(letter.text).replace(/\n/g, '<br>');
+                document.getElementById('currentPos').textContent = currentIndex + 1;
+                document.getElementById('totalLetters').textContent = sortedLetters.length;
+                document.getElementById('letterNumberInput').max = sortedLetters.length;
+                document.getElementById('letterNumberInput').value = currentIndex + 1;
+                
+                // Update URL without reloading
+                const newUrl = `${window.location.pathname}?id=${letter.id}&index=${currentIndex}`;
+                window.history.pushState({}, '', newUrl);
+            }
+        }
+
+        function navigateLetter(direction) {
+            const sortedLetters = getSortedLetters();
+            const newIndex = currentIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < sortedLetters.length) {
+                currentIndex = newIndex;
+                displayCurrentLetter();
+                updateNavigation();
+            }
+        }
+
+        function goToLetterNumber() {
+            const input = document.getElementById('letterNumberInput');
+            let number = parseInt(input.value);
+            const sortedLetters = getSortedLetters();
+            
+            if (isNaN(number)) number = 1;
+            number = Math.min(Math.max(1, number), sortedLetters.length);
+            
+            currentIndex = number - 1;
+            displayCurrentLetter();
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const sortedLetters = getSortedLetters();
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === sortedLetters.length - 1;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                navigateLetter(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateLetter(1);
+            }
+        });
+
+        loadLetter();
+    </script>
+</body>
+</html>
