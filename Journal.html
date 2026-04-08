@@ -522,7 +522,7 @@
     <div class="container">
         <div class="diary-entry">
             <div class="header">
-                <div class="envelope-icon">✉️</div>
+                <div class="envelope-icon">📓</div>
                 <h1>₍^. .^₎⟆</h1>
                 <div class="tagline">My journals</div>
             </div>
@@ -535,8 +535,7 @@
                     <button id="sortOldestBtn" class="sort-btn" onclick="setSortOrder('oldest')">Oldest First</button>
                 </div>
                 <div class="mode-control">
-                    <span>Mode:</span>
-                    <button id="readModeBtn" class="mode-btn active" onclick="switchToReadMode()">Read Only</button>
+                    <button id="readModeBtn" class="mode-btn active" onclick="switchToReadMode()">Read</button>
                     <button id="writeModeBtn" class="mode-btn" onclick="requestWriteMode()">Write</button>
                 </div>
             </div>
@@ -544,9 +543,9 @@
             <!-- Password Modal -->
             <div id="passwordModal" class="password-modal">
                 <div class="password-modal-content">
-                    <h3>Enter Password</h3>
+                    <h3>Enter password</h3>
                     <input type="password" id="passwordInput" placeholder="password" autocomplete="off">
-                    <button onclick="checkPassword()">Unlock Write Mode</button>
+                    <button onclick="checkPassword()">Unlock write mode</button>
                     <div id="passwordError" class="password-error"></div>
                 </div>
             </div>
