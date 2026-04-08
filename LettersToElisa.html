@@ -3,82 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>₍^. .^₎⟆</title>
+    <title>letters for elisa</title>
     <style>
-       body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    max-width: 680px;
-    margin: 60px auto;
-    padding: 0 20px;
-    background: #ffffff;
-}
-.diary-entry {
-    background: transparent;
-    padding: 0;
-    box-shadow: none;
-}
-textarea {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-}
-textarea:focus {
-    outline: none;
-    border-color: #4CAF50;
-}
-.entry {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 12px 0;
-}
-button {
-    background-color: #212529;
-    border-radius: 6px;
-}
-.delete-btn {
-    background-color: #dc3545;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Georgia', serif;
+            background: #f7f4ef;
+            min-height: 100vh;
+            padding: 50px 24px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Main letter card */
+        .diary-entry {
+            background: #ffffff;
+            padding: 48px 56px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            border: 1px solid #ece4d8;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #ede6dc;
+        }
+
+        .envelope-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+            color: #3d2b1a;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            color: #a0846a;
+            letter-spacing: 1px;
+        }
+
+        /* Date line - like a letter */
+        .letter-date {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #a0846a;
+            margin-bottom: 32px;
+            text-align: right;
+            border-bottom: 1px dashed #ede6dc;
+            padding-bottom: 12px;
+        }
+
+        /* Writing area */
+        .writing-area {
+            margin-bottom: 32px;
+        }
+
+        .greeting {
+            font-family: 'Georgia', serif;
+            font-size: 17px;
+            color: #3d2b1a;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 20px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            line-height: 1.7;
+            border: 1px solid #e2d6ca;
+            background: #fefcf9;
+            border-radius: 12px;
+            margin: 8px 0;
+            resize: vertical;
+            color: #2c221a;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #b8a28c;
+            background: #ffffff;
+        }
+
+        textarea::placeholder {
+            color: #c9bcab;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0 8px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: #f0ebe4;
+            color: #5c4430;
+        }
+
+        .btn-primary {
+            background: #d4c3ae;
+            color: #2c221a;
+        }
+
+        .btn-primary:hover {
+            background: #c4b094;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f0ebe4;
+            border: 1px solid #e0d5c8;
+        }
+
+        .btn-secondary:hover {
+            background: #e6dfd6;
+        }
+
+        /* Entries section */
+        .entries-section {
+            margin-top: 48px;
+        }
+
+        .section-title {
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: #8b6f54;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e8dfd4;
+        }
+
+        /* Each letter entry */
+        .letter-entry {
+            background: #fefcf9;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            border: 1px solid #ece4d8;
+            transition: all 0.2s ease;
+        }
+
+        .letter-entry:hover {
+            border-color: #d9ccbc;
+            background: #ffffff;
+        }
+
+        .letter-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0e8e0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .letter-date-display {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #b8a28c;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: 1px solid #e8ddd2;
+            color: #bfaa95;
+            font-size: 12px;
+            padding: 5px 14px;
+            border-radius: 30px;
+        }
+
+        .delete-btn:hover {
+            background: #f5ede6;
+            border-color: #d4bba4;
+            color: #a07754;
+            transform: none;
+        }
+
+        .letter-content {
+            font-family: 'Georgia', serif;
+            font-size: 15px;
+            line-height: 1.75;
+            color: #3a3028;
+            white-space: pre-wrap;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            background: #fefcf9;
+            border-radius: 16px;
+            border: 1px dashed #e0d4c8;
+            color: #b8a694;
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .empty-state p {
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Status messages */
+        .status {
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            text-align: center;
+            margin: 16px 0;
+        }
+        .status-loading { background: #f0ebe4; color: #8b6f54; }
+        .status-error { background: #fef0ed; color: #b86b52; }
+        .status-success { background: #edf3ea; color: #6f8f5c; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+            .diary-entry {
+                padding: 28px 20px;
+            }
+            .letter-entry {
+                padding: 20px;
+            }
+            .button-group button {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="diary-entry">
-        <h2>₍^. .^₎⟆</h2>
-        <div id="status"></div>
-        <div id="currentDate" style="color:#999; font-size:12px;"></div>
-        <textarea id="diaryEntry" rows="8" placeholder="Write your thoughts here..."></textarea>
-        <button onclick="saveEntry()">Upload Journal</button>
-        <button onclick="loadEntries()" style="background-color:#2196F3;">Refresh</button>
-        <div id="entriesList" style="margin-top:30px;"></div>
+    <div class="container">
+        <div class="diary-entry">
+            <div class="header">
+                <div class="envelope-icon">✉️</div>
+                <h1>₍^. .^₎⟆</h1>
+                <div class="tagline">For my best friend</div>
+            </div>
+
+            <div class="letter-date" id="currentDate"></div>
+
+            <div class="writing-area">
+                <div class="greeting">Dear friend,</div>
+                <textarea id="diaryEntry" rows="7" placeholder="Write here..."></textarea>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="saveEntry()">Save</button>
+                    <button class="btn-secondary" onclick="loadEntries()">Refresh</button>
+                </div>
+            </div>
+
+            <div id="status"></div>
+
+            <div class="entries-section">
+                <div class="section-title">Saved Letters</div>
+                <div id="entriesList"></div>
+            </div>
+        </div>
     </div>
 
     <script>
-        
-        const BIN_ID = "69d5b340856a6821890cdbfd";
+        // 🔑 YOUR JSONBIN.IO CREDENTIALS - REPLACE THESE
+        const BIN_ID = "69d5b340856a6821890cdbfd";      
         const API_KEY = "$2a$10$C32wnSCGBNKjDww3OFHAtedCX0dUnscUKzf8ZS8F65GeyLo1bgF6C";
         
         const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
         
         let currentEntries = [];
 
-        // Show current date
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+        // Set current date
+        const today = new Date();
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
         });
 
         function showStatus(message, type = 'loading') {
             const statusDiv = document.getElementById('status');
-            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            let typeClass = '';
+            if (type === 'loading') typeClass = 'status-loading';
+            if (type === 'error') typeClass = 'status-error';
+            if (type === 'success') typeClass = 'status-success';
+            
+            statusDiv.innerHTML = `<div class="status ${typeClass}">${message}</div>`;
             setTimeout(() => {
-                if (document.getElementById('status').firstChild === statusDiv.firstChild) {
+                if (statusDiv.firstChild === statusDiv.firstChild) {
                     statusDiv.innerHTML = '';
                 }
             }, 3000);
         }
 
-        // Load entries from cloud
+        async function saveToCloud(entries) {
+            const response = await fetch(API_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': API_KEY
+                },
+                body: JSON.stringify({ entries: entries })
+            });
+            return response.ok;
+        }
+
         async function loadEntries() {
-            showStatus('Loading from cloud...', 'loading');
+            showStatus('Opening your letters...', 'loading');
             try {
                 const response = await fetch(API_URL, {
                     headers: { 'X-Master-Key': API_KEY }
@@ -86,18 +368,18 @@ button {
                 const data = await response.json();
                 currentEntries = data.record.entries || [];
                 displayEntries();
-                showStatus(`Loaded ${currentEntries.length} entries`, 'loading');
+                const count = currentEntries.length;
+                showStatus(`${count} ${count === 1 ? 'letter' : 'letters'} saved`, 'success');
             } catch (error) {
                 console.error(error);
-                showStatus('Failed to load. Check your BIN_ID and API_KEY', 'error');
+                showStatus('Could not load letters. Check your connection.', 'error');
             }
         }
 
-        // Save entry to cloud
         async function saveEntry() {
             const text = document.getElementById('diaryEntry').value;
             if (!text.trim()) {
-                showStatus('Please write something first!', 'error');
+                showStatus('Write something before saving', 'error');
                 return;
             }
 
@@ -108,36 +390,60 @@ button {
 
             currentEntries.unshift(newEntry);
             
-            showStatus('Saving to cloud...', 'loading');
+            showStatus('Saving your letter...', 'loading');
             try {
-                await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
-                    },
-                    body: JSON.stringify({ entries: currentEntries })
-                });
+                await saveToCloud(currentEntries);
                 document.getElementById('diaryEntry').value = '';
                 displayEntries();
-                showStatus('Saved to cloud!', 'loading');
+                showStatus('Letter saved ✨', 'success');
             } catch (error) {
-                showStatus('Save failed. Check your connection.', 'error');
+                showStatus('Failed to save. Please try again.', 'error');
+            }
+        }
+
+        async function deleteEntry(index) {
+            if (confirm('Delete this letter? This cannot be undone.')) {
+                currentEntries.splice(index, 1);
+                showStatus('Removing letter...', 'loading');
+                try {
+                    await saveToCloud(currentEntries);
+                    displayEntries();
+                    showStatus('Letter deleted', 'success');
+                } catch (error) {
+                    showStatus('Delete failed. Please try again.', 'error');
+                    loadEntries();
+                }
             }
         }
 
         function displayEntries() {
             const container = document.getElementById('entriesList');
             if (currentEntries.length === 0) {
-                container.innerHTML = '<p>No entries yet. Write your first one!</p>';
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No letters yet. Write your first unsent letter above.</p>
+                    </div>
+                `;
                 return;
             }
-            container.innerHTML = currentEntries.map(entry => `
-                <div class="entry">
-                    <strong>${entry.date}</strong>
-                    <p style="margin-top:10px;">${entry.text.replace(/\n/g, '<br>')}</p>
+            
+            container.innerHTML = currentEntries.map((entry, index) => `
+                <div class="letter-entry">
+                    <div class="letter-meta">
+                        <span class="letter-date-display">📅 ${entry.date}</span>
+                        <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+                    </div>
+                    <div class="letter-content">${escapeHtml(entry.text).replace(/\n/g, '<br>')}</div>
                 </div>
             `).join('');
+        }
+
+        // Simple helper to prevent HTML injection
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Load entries when page opens
