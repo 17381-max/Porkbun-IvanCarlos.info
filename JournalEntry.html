@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>₍^. .^₎⟆ - Letter</title>
+    <title>₍^. .^₎⟆ - Journal</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,7 @@
             margin: 0 auto;
         }
 
-        .letter-container {
+        .Journal-container {
             background: #ffffff;
             padding: 56px 64px;
             border-radius: 16px;
@@ -46,7 +46,7 @@
             color: #8b6f54;
         }
 
-        .letter-header {
+        .Journal-header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 24px;
@@ -59,7 +59,7 @@
             opacity: 0.7;
         }
 
-        .letter-title {
+        .Journal-title {
             font-family: 'Georgia', serif;
             font-size: 28px;
             font-weight: 400;
@@ -67,13 +67,13 @@
             margin-bottom: 12px;
         }
 
-        .letter-date {
+        .Journal-date {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 12px;
             color: #b8a28c;
         }
 
-        .letter-body {
+        .Journal-body {
             font-family: 'Georgia', serif;
             font-size: 17px;
             line-height: 1.8;
@@ -166,37 +166,37 @@
 
         @media (max-width: 600px) {
             body { padding: 24px 16px; }
-            .letter-container { padding: 32px 24px; }
-            .letter-title { font-size: 22px; }
-            .letter-body { font-size: 15px; }
+            .Journal-container { padding: 32px 24px; }
+            .Journal-title { font-size: 22px; }
+            .Journal-body { font-size: 15px; }
             .navigation { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="letter-container">
-            <a href="LettersToElisa.html" class="back-link">← Back to all letters</a>
+        <div class="Journal-container">
+            <a href="JournalsToElisa.html" class="back-link">← Back to all Journals</a>
             
-            <div class="letter-header">
+            <div class="Journal-header">
                 <div class="envelope-icon">✉️</div>
-                <div class="letter-title" id="letterTitle">Loading...</div>
-                <div class="letter-date" id="letterDate"></div>
+                <div class="Journal-title" id="JournalTitle">Loading...</div>
+                <div class="Journal-date" id="JournalDate"></div>
             </div>
             
-            <div class="letter-body" id="letterBody">Loading...</div>
+            <div class="Journal-body" id="JournalBody">Loading...</div>
             
             <div class="navigation">
                 <div class="nav-buttons">
-                    <button class="nav-btn" id="prevBtn" onclick="navigateLetter(-1)">← Previous</button>
-                    <button class="nav-btn" id="nextBtn" onclick="navigateLetter(1)">Next →</button>
+                    <button class="nav-btn" id="prevBtn" onclick="navigateJournal(-1)">← Previous</button>
+                    <button class="nav-btn" id="nextBtn" onclick="navigateJournal(1)">Next →</button>
                 </div>
                 <div class="page-controls">
-                    <span class="page-info">Letter <span id="currentPos">0</span> of <span id="totalLetters">0</span></span>
+                    <span class="page-info">Journal <span id="currentPos">0</span> of <span id="totalJournals">0</span></span>
                     <div class="page-jump">
                         <span class="page-info">Go to #</span>
-                        <input type="number" id="letterNumberInput" min="1">
-                        <button class="small-btn" onclick="goToLetterNumber()">Go</button>
+                        <input type="number" id="JournalNumberInput" min="1">
+                        <button class="small-btn" onclick="goToJournalNumber()">Go</button>
                     </div>
                 </div>
             </div>
@@ -204,12 +204,12 @@
     </div>
 
     <script>
-        let allLetters = [];
+        let allJournals = [];
         let currentIndex = 0;
         let currentSortOrder = 'newest';
 
-        function getSortedLetters() {
-            const sorted = [...allLetters];
+        function getSortedJournals() {
+            const sorted = [...allJournals];
             if (currentSortOrder === 'newest') {
                 return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
             } else {
@@ -217,93 +217,93 @@
             }
         }
 
-        function loadLetter() {
+        function loadJournal() {
             const urlParams = new URLSearchParams(window.location.search);
-            const letterId = parseInt(urlParams.get('id'));
+            const JournalId = parseInt(urlParams.get('id'));
             const indexParam = parseInt(urlParams.get('index'));
             
-            // Load letters from localStorage (set by main page)
-            const storedLetters = localStorage.getItem('allLetters');
+            // Load Journals from localStorage (set by main page)
+            const storedJournals = localStorage.getItem('allJournals');
             const storedSortOrder = localStorage.getItem('currentSortOrder');
             
-            if (storedLetters) {
-                allLetters = JSON.parse(storedLetters);
+            if (storedJournals) {
+                allJournals = JSON.parse(storedJournals);
             }
             if (storedSortOrder) {
                 currentSortOrder = storedSortOrder;
             }
             
-            if (allLetters.length === 0) {
-                document.getElementById('letterTitle').textContent = 'No letters found';
-                document.getElementById('letterBody').textContent = 'Please go back and refresh the main page.';
+            if (allJournals.length === 0) {
+                document.getElementById('JournalTitle').textContent = 'No Journals found';
+                document.getElementById('JournalBody').textContent = 'Please go back and refresh the main page.';
                 return;
             }
             
-            const sortedLetters = getSortedLetters();
+            const sortedJournals = getSortedJournals();
             
-            // Find the letter by ID or index
-            if (!isNaN(letterId)) {
-                currentIndex = sortedLetters.findIndex(l => l.id === letterId);
-            } else if (!isNaN(indexParam) && indexParam >= 0 && indexParam < sortedLetters.length) {
+            // Find the Journal by ID or index
+            if (!isNaN(JournalId)) {
+                currentIndex = sortedJournals.findIndex(l => l.id === JournalId);
+            } else if (!isNaN(indexParam) && indexParam >= 0 && indexParam < sortedJournals.length) {
                 currentIndex = indexParam;
             }
             
             if (currentIndex === -1) currentIndex = 0;
             
-            displayCurrentLetter();
+            displayCurrentJournal();
             updateNavigation();
         }
 
-        function displayCurrentLetter() {
-            const sortedLetters = getSortedLetters();
-            const letter = sortedLetters[currentIndex];
+        function displayCurrentJournal() {
+            const sortedJournals = getSortedJournals();
+            const Journal = sortedJournals[currentIndex];
             
-            if (letter) {
-                document.getElementById('letterTitle').textContent = letter.title || 'Untitled letter';
-                document.getElementById('letterDate').textContent = `📅 ${letter.date}`;
-                document.getElementById('letterBody').innerHTML = escapeHtml(letter.text).replace(/\n/g, '<br>');
+            if (Journal) {
+                document.getElementById('JournalTitle').textContent = Journal.title || 'Untitled Journal';
+                document.getElementById('JournalDate').textContent = `📅 ${Journal.date}`;
+                document.getElementById('JournalBody').innerHTML = escapeHtml(Journal.text).replace(/\n/g, '<br>');
                 document.getElementById('currentPos').textContent = currentIndex + 1;
-                document.getElementById('totalLetters').textContent = sortedLetters.length;
-                document.getElementById('letterNumberInput').max = sortedLetters.length;
-                document.getElementById('letterNumberInput').value = currentIndex + 1;
+                document.getElementById('totalJournals').textContent = sortedJournals.length;
+                document.getElementById('JournalNumberInput').max = sortedJournals.length;
+                document.getElementById('JournalNumberInput').value = currentIndex + 1;
                 
                 // Update URL without reloading
-                const newUrl = `${window.location.pathname}?id=${letter.id}&index=${currentIndex}`;
+                const newUrl = `${window.location.pathname}?id=${Journal.id}&index=${currentIndex}`;
                 window.history.pushState({}, '', newUrl);
             }
         }
 
-        function navigateLetter(direction) {
-            const sortedLetters = getSortedLetters();
+        function navigateJournal(direction) {
+            const sortedJournals = getSortedJournals();
             const newIndex = currentIndex + direction;
             
-            if (newIndex >= 0 && newIndex < sortedLetters.length) {
+            if (newIndex >= 0 && newIndex < sortedJournals.length) {
                 currentIndex = newIndex;
-                displayCurrentLetter();
+                displayCurrentJournal();
                 updateNavigation();
             }
         }
 
-        function goToLetterNumber() {
-            const input = document.getElementById('letterNumberInput');
+        function goToJournalNumber() {
+            const input = document.getElementById('JournalNumberInput');
             let number = parseInt(input.value);
-            const sortedLetters = getSortedLetters();
+            const sortedJournals = getSortedJournals();
             
             if (isNaN(number)) number = 1;
-            number = Math.min(Math.max(1, number), sortedLetters.length);
+            number = Math.min(Math.max(1, number), sortedJournals.length);
             
             currentIndex = number - 1;
-            displayCurrentLetter();
+            displayCurrentJournal();
             updateNavigation();
         }
 
         function updateNavigation() {
-            const sortedLetters = getSortedLetters();
+            const sortedJournals = getSortedJournals();
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             
             prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === sortedLetters.length - 1;
+            nextBtn.disabled = currentIndex === sortedJournals.length - 1;
         }
 
         function escapeHtml(text) {
@@ -315,13 +315,13 @@
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowLeft') {
-                navigateLetter(-1);
+                navigateJournal(-1);
             } else if (e.key === 'ArrowRight') {
-                navigateLetter(1);
+                navigateJournal(1);
             }
         });
 
-        loadLetter();
+        loadJournal();
     </script>
 </body>
 </html>
