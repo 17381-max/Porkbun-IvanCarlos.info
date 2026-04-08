@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>₍^. .^₎⟆ - Letters</title>
+    <title>₍^. .^₎⟆ - Journals</title>
     <style>
         * {
             margin: 0;
@@ -48,7 +48,7 @@
             font-family: 'Georgia', serif;
             font-size: 28px;
             font-weight: 400;
-            letter-spacing: -0.3px;
+            Journal-spacing: -0.3px;
             color: #3d2b1a;
             margin-bottom: 8px;
         }
@@ -57,7 +57,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 13px;
             color: #a0846a;
-            letter-spacing: 1px;
+            Journal-spacing: 1px;
         }
 
         .mode-area {
@@ -181,7 +181,7 @@
             margin-top: 8px;
         }
 
-        .letter-date {
+        .Journal-date {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 12px;
             color: #a0846a;
@@ -280,7 +280,7 @@
             font-weight: 400;
             color: #8b6f54;
             margin-bottom: 24px;
-            letter-spacing: 1px;
+            Journal-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -294,8 +294,8 @@
             background: #e8dfd4;
         }
 
-        /* Letter preview card - clickable */
-        .letter-preview {
+        /* Journal preview card - clickable */
+        .Journal-preview {
             background: #fefcf9;
             border-radius: 16px;
             padding: 24px 28px;
@@ -305,7 +305,7 @@
             cursor: pointer;
         }
 
-        .letter-preview:hover {
+        .Journal-preview:hover {
             border-color: #d4bba4;
             background: #ffffff;
             transform: translateX(4px);
@@ -461,7 +461,7 @@
         @media (max-width: 600px) {
             body { padding: 24px 16px; }
             .diary-entry { padding: 28px 20px; }
-            .letter-preview { padding: 18px 20px; }
+            .Journal-preview { padding: 18px 20px; }
             .preview-title { font-size: 16px; }
             .mode-area { flex-direction: column; align-items: stretch; }
             .sort-control, .mode-badge { justify-content: center; }
@@ -500,11 +500,11 @@
                 </div>
             </div>
 
-            <div class="letter-date" id="currentDate"></div>
+            <div class="Journal-date" id="currentDate"></div>
 
             <div id="writingArea" class="writing-area">
                 <div class="greeting">Dear friend,</div>
-                <input type="text" id="letterTitle" class="title-input" placeholder="Letter title (optional)">
+                <input type="text" id="JournalTitle" class="title-input" placeholder="Journal title (optional)">
                 <textarea id="diaryEntry" rows="7" placeholder="Write here..."></textarea>
                 <div class="button-group">
                     <button class="btn-primary" onclick="saveEntry()">Save</button>
@@ -647,13 +647,13 @@
             displayEntries();
         }
 
-        function openLetter(globalIndex) {
+        function openJournal(globalIndex) {
             const sortedEntries = getSortedEntries();
-            const letter = sortedEntries[globalIndex];
-            if (letter) {
-                localStorage.setItem('allLetters', JSON.stringify(currentEntries));
+            const Journal = sortedEntries[globalIndex];
+            if (Journal) {
+                localStorage.setItem('allJournals', JSON.stringify(currentEntries));
                 localStorage.setItem('currentSortOrder', currentSortOrder);
-                window.location.href = `letter.html?id=${letter.id}&index=${globalIndex}`;
+                window.location.href = `JournalEntry.html?id=${Journal.id}&index=${globalIndex}`;
             }
         }
 
@@ -706,34 +706,34 @@
         }
 
         async function loadEntries() {
-            showStatus('Opening your letters...', 'loading');
+            showStatus('Opening your Journals...', 'loading');
             try {
                 const response = await fetch(API_URL, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await response.json();
                 currentEntries = data.record.entries || [];
                 displayEntries();
-                showStatus(`${currentEntries.length} ${currentEntries.length === 1 ? 'letter' : 'letters'} saved`, 'success');
+                showStatus(`${currentEntries.length} ${currentEntries.length === 1 ? 'Journal' : 'Journals'} saved`, 'success');
             } catch (error) {
-                showStatus('Could not load letters.', 'error');
+                showStatus('Could not load Journals.', 'error');
             }
         }
 
         async function saveEntry() {
             if (!isWriteMode) { showStatus('Unlock write mode first', 'error'); return; }
-            const title = document.getElementById('letterTitle').value.trim();
+            const title = document.getElementById('JournalTitle').value.trim();
             const text = document.getElementById('diaryEntry').value;
             if (!text.trim()) { showStatus('Write something before saving', 'error'); return; }
-            const newEntry = { id: Date.now(), title: title || "Untitled letter", date: new Date().toLocaleString(), text: text };
+            const newEntry = { id: Date.now(), title: title || "Untitled Journal", date: new Date().toLocaleString(), text: text };
             currentEntries.push(newEntry);
             showStatus('Saving...', 'loading');
             try {
                 await saveToCloud(currentEntries);
-                document.getElementById('letterTitle').value = '';
+                document.getElementById('JournalTitle').value = '';
                 document.getElementById('diaryEntry').value = '';
                 if (currentSortOrder === 'newest') currentPage = 1;
                 else currentPage = getTotalPages();
                 displayEntries();
-                showStatus('Letter saved! Mrow!', 'success');
+                showStatus('Journal saved! Mrow!', 'success');
             } catch (error) { showStatus('Failed to save.', 'error'); }
         }
 
@@ -742,7 +742,7 @@
             const sortedEntries = getSortedEntries();
             const actualEntry = sortedEntries[globalIndex];
             const actualIndex = currentEntries.findIndex(e => e.id === actualEntry.id);
-            if (confirm('Delete this letter?')) {
+            if (confirm('Delete this Journal?')) {
                 currentEntries.splice(actualIndex, 1);
                 try {
                     await saveToCloud(currentEntries);
@@ -750,7 +750,7 @@
                     if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
                     else if (totalPages === 0) currentPage = 1;
                     displayEntries();
-                    showStatus('Letter deleted', 'success');
+                    showStatus('Journal deleted', 'success');
                 } catch (error) { showStatus('Delete failed.', 'error'); }
             }
         }
@@ -758,7 +758,7 @@
         function displayEntries() {
             const container = document.getElementById('entriesList');
             if (currentEntries.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No letters yet. Write your first unsent letter above.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No Journals yet. Write your first unsent Journal above.</p></div>`;
                 updatePaginationControls();
                 return;
             }
@@ -772,8 +772,8 @@
                 const globalIndex = globalStartIndex + idx;
                 const preview = getPreviewText(entry.text, 100);
                 return `
-                    <div class="letter-preview" onclick="openLetter(${globalIndex})">
-                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled letter')}</div>
+                    <div class="Journal-preview" onclick="openJournal(${globalIndex})">
+                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled Journal')}</div>
                         <div class="preview-date">📅 ${entry.date}</div>
                         <div class="preview-excerpt">${escapeHtml(preview)}</div>
                         <div class="action-buttons">
