@@ -3,51 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Letters to elisa</title>
+    <title>₍^. .^₎⟆</title>
     <style>
         body {
-            font-family: 'Georgia', serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #faf9f8;
-        }
-        .diary-entry {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            font-family: 'Georgia', serif;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .entry {
-            background: #f5f5f5;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .status {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .loading { background: #e3f2fd; color: #1976d2; }
-        .error { background: #ffebee; color: #c62828; }
+    font-family: 'Georgia', serif;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #e8e0d0;
+}
+.diary-entry {
+    background: #fffef5;
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #d4c9b0;
+}
+.entry {
+    background: transparent;
+    border-bottom: 1px dashed #d4c9b0;
+    padding: 20px 0;
+    margin: 0;
+}
+.entry strong {
+    font-family: 'Courier New', monospace;
+    color: #8B7355;
+    font-size: 11px;
+}
     </style>
 </head>
 <body>
@@ -56,7 +38,7 @@
         <div id="status"></div>
         <div id="currentDate" style="color:#999; font-size:12px;"></div>
         <textarea id="diaryEntry" rows="8" placeholder="Write your thoughts here..."></textarea>
-        <button onclick="saveEntry()">Save to Cloud</button>
+        <button onclick="saveEntry()">Upload Journal</button>
         <button onclick="loadEntries()" style="background-color:#2196F3;">Refresh</button>
         <div id="entriesList" style="margin-top:30px;"></div>
     </div>
