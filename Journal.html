@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>₍^. .^₎⟆ - Journals</title>
+    <title>₍^. .^₎⟆ Journals</title>
     <style>
         * {
             margin: 0;
@@ -48,7 +48,7 @@
             font-family: 'Georgia', serif;
             font-size: 28px;
             font-weight: 400;
-            Journal-spacing: -0.3px;
+            letter-spacing: -0.3px;
             color: #3d2b1a;
             margin-bottom: 8px;
         }
@@ -57,18 +57,19 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 13px;
             color: #a0846a;
-            Journal-spacing: 1px;
+            letter-spacing: 1px;
         }
 
-        .mode-area {
+        .controls-area {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
+        /* Sort control - matching your style */
         .sort-control {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
@@ -101,7 +102,8 @@
             background: #e6dfd6;
         }
 
-        .mode-badge {
+        /* Mode control - now matching sort control exactly */
+        .mode-control {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
             background: #f0ebe4;
@@ -110,23 +112,30 @@
             color: #8b6f54;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .unlock-btn {
+        .mode-btn {
             background: transparent;
             border: 1px solid #e0d5c8;
-            font-size: 11px;
-            padding: 4px 12px;
+            font-size: 10px;
+            padding: 3px 10px;
             border-radius: 20px;
             color: #a0846a;
             cursor: pointer;
         }
 
-        .unlock-btn:hover {
-            background: #f0ebe4;
+        .mode-btn.active {
+            background: #d4c3ae;
+            color: #2c221a;
+            border-color: #c4b094;
         }
 
+        .mode-btn:hover:not(.active) {
+            background: #e6dfd6;
+        }
+
+        /* Keep password modal but trigger from mode change */
         .password-modal {
             display: none;
             position: fixed;
@@ -166,6 +175,11 @@
             text-align: center;
         }
 
+        .password-modal-content input:focus {
+            outline: none;
+            border-color: #b8a28c;
+        }
+
         .password-modal-content button {
             background: #d4c3ae;
             color: #2c221a;
@@ -200,14 +214,6 @@
             display: block;
         }
 
-        .greeting {
-            font-family: 'Georgia', serif;
-            font-size: 17px;
-            color: #3d2b1a;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-
         .title-input {
             width: 100%;
             padding: 12px 16px;
@@ -219,6 +225,12 @@
             border-radius: 12px;
             margin: 8px 0;
             color: #2c221a;
+        }
+
+        .title-input:focus {
+            outline: none;
+            border-color: #b8a28c;
+            background: #ffffff;
         }
 
         textarea {
@@ -233,6 +245,12 @@
             margin: 8px 0;
             resize: vertical;
             color: #2c221a;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #b8a28c;
+            background: #ffffff;
         }
 
         .button-group {
@@ -265,11 +283,6 @@
             transform: translateY(-1px);
         }
 
-        .btn-secondary {
-            background: #f0ebe4;
-            border: 1px solid #e0d5c8;
-        }
-
         .entries-section {
             margin-top: 48px;
         }
@@ -280,7 +293,7 @@
             font-weight: 400;
             color: #8b6f54;
             margin-bottom: 24px;
-            Journal-spacing: 1px;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -416,6 +429,10 @@
             border-color: #c4b094;
         }
 
+        .page-number:hover:not(.active) {
+            background: #f0ebe4;
+        }
+
         .page-jump {
             display: flex;
             align-items: center;
@@ -432,6 +449,25 @@
             text-align: center;
         }
 
+        .page-jump input:focus {
+            outline: none;
+            border-color: #b8a28c;
+        }
+
+        .page-jump button {
+            background: transparent;
+            border: 1px solid #e0d5c8;
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #a0846a;
+            cursor: pointer;
+        }
+
+        .page-jump button:hover {
+            background: #f0ebe4;
+        }
+
         .page-info {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
@@ -445,6 +481,18 @@
             border-radius: 16px;
             border: 1px dashed #e0d4c8;
             color: #b8a694;
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .empty-state p {
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-style: italic;
         }
 
         .status {
@@ -463,8 +511,8 @@
             .diary-entry { padding: 28px 20px; }
             .Journal-preview { padding: 18px 20px; }
             .preview-title { font-size: 16px; }
-            .mode-area { flex-direction: column; align-items: stretch; }
-            .sort-control, .mode-badge { justify-content: center; }
+            .controls-area { flex-direction: column; align-items: stretch; }
+            .sort-control, .mode-control { justify-content: center; }
             .pagination { flex-direction: column; align-items: center; }
             .page-jump { margin-left: 0; }
         }
@@ -479,18 +527,21 @@
                 <div class="tagline">Journals - Ivan</div>
             </div>
 
-            <div class="mode-area">
+            <!-- Controls area with both sort and mode matching -->
+            <div class="controls-area">
                 <div class="sort-control">
-                    <span>📖 Sort by:</span>
+                    <span>Sort by:</span>
                     <button id="sortNewestBtn" class="sort-btn active" onclick="setSortOrder('newest')">Newest First</button>
                     <button id="sortOldestBtn" class="sort-btn" onclick="setSortOrder('oldest')">Oldest First</button>
                 </div>
-                <div class="mode-badge">
-                    <span id="modeText">Read Only</span>
-                    <button class="unlock-btn" onclick="showPasswordModal()">Unlock</button>
+                <div class="mode-control">
+                    <span>Mode:</span>
+                    <button id="readModeBtn" class="mode-btn active" onclick="switchToReadMode()">Read Only</button>
+                    <button id="writeModeBtn" class="mode-btn" onclick="requestWriteMode()">Write</button>
                 </div>
             </div>
 
+            <!-- Password Modal -->
             <div id="passwordModal" class="password-modal">
                 <div class="password-modal-content">
                     <h3>Enter Password</h3>
@@ -655,6 +706,24 @@
             }
         }
 
+        function switchToReadMode() {
+            if (!isWriteMode) return;
+            isWriteMode = false;
+            document.body.classList.add('read-mode');
+            document.getElementById('writingArea').classList.remove('visible');
+            
+            // Update button states
+            document.getElementById('readModeBtn').classList.add('active');
+            document.getElementById('writeModeBtn').classList.remove('active');
+            
+            showStatus('Switched to Read Only mode', 'success');
+        }
+
+        function requestWriteMode() {
+            if (isWriteMode) return;
+            showPasswordModal();
+        }
+
         function showPasswordModal() {
             document.getElementById('passwordModal').style.display = 'flex';
             document.getElementById('passwordInput').value = '';
@@ -678,8 +747,12 @@
             isWriteMode = true;
             document.body.classList.remove('read-mode');
             document.getElementById('writingArea').classList.add('visible');
-            document.getElementById('modeText').textContent = 'Write Mode';
-            showStatus('Write mode unlocked!', 'success');
+            
+            // Update button states
+            document.getElementById('writeModeBtn').classList.add('active');
+            document.getElementById('readModeBtn').classList.remove('active');
+            
+            showStatus('Write mode unlocked! You can now add and delete journals.', 'success');
         }
 
         window.onclick = function(event) {
@@ -717,7 +790,7 @@
         }
 
         async function saveEntry() {
-            if (!isWriteMode) { showStatus('Unlock write mode first', 'error'); return; }
+            if (!isWriteMode) { showStatus('Switch to Write mode first', 'error'); return; }
             const title = document.getElementById('JournalTitle').value.trim();
             const text = document.getElementById('diaryEntry').value;
             if (!text.trim()) { showStatus('Write something before saving', 'error'); return; }
@@ -736,7 +809,7 @@
         }
 
         async function deleteEntry(globalIndex) {
-            if (!isWriteMode) { showStatus('Unlock write mode first', 'error'); return; }
+            if (!isWriteMode) { showStatus('Switch to Write mode first', 'error'); return; }
             const sortedEntries = getSortedEntries();
             const actualEntry = sortedEntries[globalIndex];
             const actualIndex = currentEntries.findIndex(e => e.id === actualEntry.id);
@@ -756,7 +829,7 @@
         function displayEntries() {
             const container = document.getElementById('entriesList');
             if (currentEntries.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No Journals yet. Write your first unsent Journal above.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No Journals yet. Write your first Journal above.</p></div>`;
                 updatePaginationControls();
                 return;
             }
