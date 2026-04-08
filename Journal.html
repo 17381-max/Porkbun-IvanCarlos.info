@@ -524,7 +524,7 @@
             <div class="header">
                 <div class="envelope-icon">✉️</div>
                 <h1>₍^. .^₎⟆</h1>
-                <div class="tagline">Journals - Ivan</div>
+                <div class="tagline">My journals</div>
             </div>
 
             <!-- Controls area with both sort and mode matching -->
@@ -777,7 +777,7 @@
         }
 
         async function loadEntries() {
-            showStatus('Opening your Journals...', 'loading');
+            showStatus('Opening your journals...', 'loading');
             try {
                 const response = await fetch(API_URL, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await response.json();
@@ -785,7 +785,7 @@
                 displayEntries();
                 showStatus(`${currentEntries.length} ${currentEntries.length === 1 ? 'Journal' : 'Journals'} saved`, 'success');
             } catch (error) {
-                showStatus('Could not load Journals.', 'error');
+                showStatus('Could not load journals.', 'error');
             }
         }
 
@@ -813,7 +813,7 @@
             const sortedEntries = getSortedEntries();
             const actualEntry = sortedEntries[globalIndex];
             const actualIndex = currentEntries.findIndex(e => e.id === actualEntry.id);
-            if (confirm('Delete this Journal?')) {
+            if (confirm('Delete this journal?')) {
                 currentEntries.splice(actualIndex, 1);
                 try {
                     await saveToCloud(currentEntries);
@@ -829,7 +829,7 @@
         function displayEntries() {
             const container = document.getElementById('entriesList');
             if (currentEntries.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No Journals yet. Write your first Journal above.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><p>No journals yet. Write your first journal above.</p></div>`;
                 updatePaginationControls();
                 return;
             }
@@ -844,7 +844,7 @@
                 const preview = getPreviewText(entry.text, 100);
                 return `
                     <div class="Journal-preview" onclick="openJournal(${globalIndex})">
-                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled Journal')}</div>
+                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled journal')}</div>
                         <div class="preview-date">📅 ${entry.date}</div>
                         <div class="preview-excerpt">${escapeHtml(preview)}</div>
                         <div class="action-buttons">
