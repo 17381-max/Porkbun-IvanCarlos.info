@@ -69,7 +69,6 @@
             gap: 12px;
         }
 
-        /* Sort control - matching your style */
         .sort-control {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
@@ -102,7 +101,6 @@
             background: #e6dfd6;
         }
 
-        /* Mode control - now matching sort control exactly */
         .mode-control {
             font-family: 'SF Mono', 'Courier New', monospace;
             font-size: 11px;
@@ -135,7 +133,6 @@
             background: #e6dfd6;
         }
 
-        /* Keep password modal but trigger from mode change */
         .password-modal {
             display: none;
             position: fixed;
@@ -193,6 +190,81 @@
             color: #b86b52;
             font-size: 12px;
             margin-top: 8px;
+        }
+
+        /* Edit modal */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .edit-modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #ece4d8;
+        }
+
+        .edit-modal-content h3 {
+            font-family: 'Georgia', serif;
+            color: #3d2b1a;
+            margin-bottom: 20px;
+        }
+
+        .edit-modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid #e2d6ca;
+            background: #fefcf9;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            color: #2c221a;
+        }
+
+        .edit-modal-content textarea {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            line-height: 1.6;
+            border: 1px solid #e2d6ca;
+            background: #fefcf9;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            resize: vertical;
+            color: #2c221a;
+            min-height: 200px;
+        }
+
+        .edit-modal-content input:focus,
+        .edit-modal-content textarea:focus {
+            outline: none;
+            border-color: #b8a28c;
+            background: #ffffff;
+        }
+
+        .edit-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .edit-buttons button {
+            padding: 8px 20px;
         }
 
         .Journal-date {
@@ -307,7 +379,6 @@
             background: #e8dfd4;
         }
 
-        /* Journal preview card - clickable */
         .Journal-preview {
             background: #fefcf9;
             border-radius: 16px;
@@ -352,11 +423,28 @@
         .action-buttons {
             display: flex;
             justify-content: flex-end;
+            gap: 8px;
             margin-top: 12px;
         }
 
         body.read-mode .action-buttons {
             display: none;
+        }
+
+        .edit-btn {
+            background: transparent;
+            border: 1px solid #e8ddd2;
+            color: #bfaa95;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #f5ede6;
+            border-color: #d4bba4;
+            color: #a07754;
         }
 
         .delete-btn {
@@ -527,7 +615,6 @@
                 <div class="tagline">My journals</div>
             </div>
 
-            <!-- Controls area with both sort and mode matching -->
             <div class="controls-area">
                 <div class="sort-control">
                     <span>Sort by:</span>
@@ -548,6 +635,19 @@
                     <input type="password" id="passwordInput" placeholder="password" autocomplete="off">
                     <button onclick="checkPassword()">Unlock write mode</button>
                     <div id="passwordError" class="password-error"></div>
+                </div>
+            </div>
+
+            <!-- Edit Modal -->
+            <div id="editModal" class="edit-modal">
+                <div class="edit-modal-content">
+                    <h3>Edit Journal</h3>
+                    <input type="text" id="editTitle" placeholder="Title">
+                    <textarea id="editContent" rows="8" placeholder="Content"></textarea>
+                    <div class="edit-buttons">
+                        <button onclick="saveEdit()" class="btn-primary">Save Changes</button>
+                        <button onclick="closeEditModal()">Cancel</button>
+                    </div>
                 </div>
             </div>
 
@@ -593,6 +693,7 @@
         let isWriteMode = false;
         let currentSortOrder = 'newest';
         let currentPage = 1;
+        let editingIndex = null; // Store the index of the entry being edited
 
         const today = new Date();
         document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', { 
@@ -706,13 +807,62 @@
             }
         }
 
+        function openEditModal(globalIndex) {
+            if (!isWriteMode) {
+                showStatus('Switch to Write mode first', 'error');
+                return;
+            }
+            
+            const sortedEntries = getSortedEntries();
+            const entry = sortedEntries[globalIndex];
+            const actualIndex = currentEntries.findIndex(e => e.id === entry.id);
+            editingIndex = actualIndex;
+            
+            document.getElementById('editTitle').value = entry.title || '';
+            document.getElementById('editContent').value = entry.text;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingIndex = null;
+        }
+
+        async function saveEdit() {
+            if (editingIndex === null) return;
+            
+            const newTitle = document.getElementById('editTitle').value.trim();
+            const newText = document.getElementById('editContent').value;
+            
+            if (!newText.trim()) {
+                showStatus('Content cannot be empty', 'error');
+                return;
+            }
+            
+            currentEntries[editingIndex] = {
+                ...currentEntries[editingIndex],
+                title: newTitle || "Untitled Journal",
+                text: newText,
+                lastEdited: new Date().toLocaleString()
+            };
+            
+            showStatus('Saving changes...', 'loading');
+            try {
+                await saveToCloud(currentEntries);
+                closeEditModal();
+                displayEntries();
+                showStatus('Journal updated!', 'success');
+            } catch (error) {
+                showStatus('Failed to save changes.', 'error');
+            }
+        }
+
         function switchToReadMode() {
             if (!isWriteMode) return;
             isWriteMode = false;
             document.body.classList.add('read-mode');
             document.getElementById('writingArea').classList.remove('visible');
             
-            // Update button states
             document.getElementById('readModeBtn').classList.add('active');
             document.getElementById('writeModeBtn').classList.remove('active');
             
@@ -748,16 +898,17 @@
             document.body.classList.remove('read-mode');
             document.getElementById('writingArea').classList.add('visible');
             
-            // Update button states
             document.getElementById('writeModeBtn').classList.add('active');
             document.getElementById('readModeBtn').classList.remove('active');
             
-            showStatus('Write mode unlocked! You can now add and delete journals.', 'success');
+            showStatus('Write mode unlocked! You can now add, edit, and delete journals.', 'success');
         }
 
         window.onclick = function(event) {
-            const modal = document.getElementById('passwordModal');
-            if (event.target === modal) closePasswordModal();
+            const passwordModal = document.getElementById('passwordModal');
+            const editModal = document.getElementById('editModal');
+            if (event.target === passwordModal) closePasswordModal();
+            if (event.target === editModal) closeEditModal();
         }
 
         function showStatus(message, type = 'loading') {
@@ -777,7 +928,7 @@
         }
 
         async function loadEntries() {
-            showStatus('Opening your journals...', 'loading');
+            showStatus('Loading your journals...', 'loading');
             try {
                 const response = await fetch(API_URL, { headers: { 'X-Master-Key': API_KEY } });
                 const data = await response.json();
@@ -842,12 +993,14 @@
             container.innerHTML = pageEntries.map((entry, idx) => {
                 const globalIndex = globalStartIndex + idx;
                 const preview = getPreviewText(entry.text, 100);
+                const editedBadge = entry.lastEdited ? ' ✎' : '';
                 return `
                     <div class="Journal-preview" onclick="openJournal(${globalIndex})">
-                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled journal')}</div>
-                        <div class="preview-date">📅 ${entry.date}</div>
+                        <div class="preview-title">${escapeHtml(entry.title || 'Untitled journal')}${editedBadge}</div>
+                        <div class="preview-date">📅 ${entry.date}${entry.lastEdited ? ` (edited ${entry.lastEdited})` : ''}</div>
                         <div class="preview-excerpt">${escapeHtml(preview)}</div>
                         <div class="action-buttons">
+                            <button class="edit-btn" onclick="event.stopPropagation(); openEditModal(${globalIndex})">Edit</button>
                             <button class="delete-btn" onclick="event.stopPropagation(); deleteEntry(${globalIndex})">Delete</button>
                         </div>
                     </div>
